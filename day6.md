@@ -18,5 +18,5 @@ The Experience section has no dates listed for either role — adding start/end 
 If you have any certifications (even free ones, e.g., Google/Coursera AI courses), add a Certifications section — it's a high-value ATS keyword area currently missing.
 Consider adding a GitHub or portfolio link alongside LinkedIn if you have one, since your projects are code-based.
 
-<a href="https://github.com/Nidhisingh0z/60-DAYS-wITH-CLAUDE/raw/main/claude/Nidhi_Singh_Resume_ATS_Optimized.pdf" target="_blank">Optimised Resume</a>
+<a href="https://github.com/Nidhisingh0z/60-DAYS-wITH-CLAUDE/raw/main/D:/claude/Nidhi_Singh_Resume_ATS_Optimized.pdf" target="_blank">Optimised Resume</a>
 
