@@ -1,0 +1,22 @@
+Personal Environmental Health Analyzer
+Air & water quality intelligence, translated into what it means for your body
+Sources:
+AQI.in India Dashboard
+·
+WAQI / aqicn.org (CPCB, SAFAR, US Embassy monitors)
+·
+IQAir India
+·
+CPCB National Water Quality data
+·
+BIS IS 10500:2012 TDS benchmarks
+·
+RiverSoft / Boon / RO Care India water-hardness surveys
+What's in it:
+
+Hero — city picker driving an animated "breath ring" Environmental Health Score gauge
+5 national metrics, 5 interactive charts (AQI/PM2.5/PM10 comparison, health-score ranking, category distribution)
+Filters — city chips, AQI range, pollutant focus, risk-tier, and a 2-city compare mode
+12 city detail cards with live score bars, clickable to set the focus city
+Health analysis — lungs/sleep/energy/exercise/long-term for air, hair fall/dryness/scalp/skin/acne/sensitivity for water, each with 🟢🟡🔴 indicators
+Report card with A–F grades, insights panel (cleanest/dirtiest, anomaly, surprise finding), personalized recommendations, and an executive summary
