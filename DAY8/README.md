@@ -20,8 +20,3 @@ Filters — city chips, AQI range, pollutant focus, risk-tier, and a 2-city comp
 12 city detail cards with live score bars, clickable to set the focus city
 Health analysis — lungs/sleep/energy/exercise/long-term for air, hair fall/dryness/scalp/skin/acne/sensitivity for water, each with 🟢🟡🔴 indicators
 Report card with A–F grades, insights panel (cleanest/dirtiest, anomaly, surprise finding), personalized recommendations, and an executive summary
-
-git add index.html
-
-
-
