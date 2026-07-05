@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- ============ SEO META TAGS ============ -->
+<title>Nidhi Singh — AI/ML Student & Voice-Tech Builder</title>
+<meta name="description" content="Portfolio of Nidhi Singh, a B.Tech AI/ML student from Kanpur building voice-integrated chatbots, speech recognition tools, and ML classification models." />
+<meta name="keywords" content="Nidhi Singh, AI, Machine Learning, Chatbot, Speech Recognition, Kanpur, Portfolio, B.Tech AI ML" />
+<meta name="author" content="Nidhi Singh" />
+<meta name="robots" content="index, follow" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Nidhi Singh — AI/ML Student & Voice-Tech Builder" />
+<meta property="og:description" content="Building accessible, voice-first AI — from speech-recognition chatbots to ML classification models." />
+<meta property="og:image" content="https://placehold.co/1200x630/4F46E5/ffffff?text=Nidhi+Singh" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Nidhi Singh — AI/ML Student & Voice-Tech Builder" />
+<meta name="twitter:description" content="Building accessible, voice-first AI — from speech-recognition chatbots to ML classification models." />
+<meta name="twitter:image" content="https://placehold.co/1200x630/4F46E5/ffffff?text=Nidhi+Singh" />
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>◈</text></svg>" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['Sora', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+          mono: ['"IBM Plex Mono"', 'monospace'],
+        },
+        colors: {
+          ink: { 950: '#0A0C14', 900: '#0E111B', 800: '#151926', 700: '#1E2333' },
+          paper: { 50: '#FAFAF8', 100: '#F1EFE9' },
+          indigo: { DEFAULT: '#4F46E5', 600: '#4338CA', 400: '#7C74F0' },
+          amber: { DEFAULT: '#FF6B4A', 500: '#F4562F' },
+        },
+      },
+    },
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; }
+  ::selection { background: #4F46E5; color: white; }
+
+  .nav-link.active { color: #4F46E5; }
+  html.dark .nav-link.active { color: #7C74F0; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+  .skill-fill { width: 0%; transition: width 1.4s cubic-bezier(.16,1,.3,1); }
+
+  .grid-fade {
+    background-image:
+      linear-gradient(to right, rgba(79,70,229,0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(79,70,229,0.08) 1px, transparent 1px);
+    background-size: 42px 42px;
+    -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, black 10%, transparent 70%);
+    mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, black 10%, transparent 70%);
+  }
+
+  #typed-cursor { animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .card-hover { transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease; }
+  .card-hover:hover { transform: translateY(-6px); }
+
+  /* Waveform signature — nods to speech-recognition work */
+  .wave-bar { animation: wave 1.2s ease-in-out infinite; transform-origin: center; }
+  @keyframes wave { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #4F46E555; border-radius: 999px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { transition: none !important; opacity: 1 !important; transform: none !important; }
+    #typed-cursor, .wave-bar { animation: none; }
+  }
+
+  :focus-visible { outline: 2px solid #4F46E5; outline-offset: 3px; border-radius: 4px; }
+</style>
+</head>
+
+<body class="bg-paper-50 dark:bg-ink-950 text-ink-900 dark:text-paper-100 font-body antialiased transition-colors duration-300">
+
+<!-- ================= NAVBAR ================= -->
+<header class="fixed top-4 inset-x-0 z-50 flex justify-center px-4">
+  <nav class="w-full max-w-3xl flex items-center justify-between gap-2 rounded-full border border-ink-900/10 dark:border-paper-100/10 bg-paper-50/80 dark:bg-ink-900/70 backdrop-blur-lg px-4 sm:px-6 py-2.5 shadow-lg shadow-ink-900/5">
+    <a href="#home" class="font-display font-700 text-lg tracking-tight flex items-center gap-1">
+      <span class="text-indigo">◈</span><span class="hidden sm:inline">Nidhi</span>
+    </a>
+
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+      <a href="#about" class="nav-link opacity-80 hover:opacity-100 hover:text-indigo transition">About</a>
+      <a href="#skills" class="nav-link opacity-80 hover:opacity-100 hover:text-indigo transition">Skills</a>
+      <a href="#projects" class="nav-link opacity-80 hover:opacity-100 hover:text-indigo transition">Projects</a>
+      <a href="#achievements" class="nav-link opacity-80 hover:opacity-100 hover:text-indigo transition">Achievements</a>
+      <a href="#contact" class="nav-link opacity-80 hover:opacity-100 hover:text-indigo transition">Contact</a>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button id="theme-toggle" aria-label="Toggle dark mode" class="w-9 h-9 grid place-items-center rounded-full border border-ink-900/10 dark:border-paper-100/10 hover:bg-indigo/10 transition">
+        <svg id="icon-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.36 6.36l-.7-.7M6.34 6.34l-.7-.7m12.02 0l-.7.7M6.34 17.66l-.7.7M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+        <svg id="icon-moon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+      </button>
+      <button id="mobile-menu-btn" aria-label="Open menu" class="md:hidden w-9 h-9 grid place-items-center rounded-full border border-ink-900/10 dark:border-paper-100/10">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- Mobile menu -->
+<div id="mobile-menu" class="fixed inset-0 z-40 hidden bg-paper-50/97 dark:bg-ink-950/97 backdrop-blur-lg">
+  <div class="flex flex-col items-center justify-center h-full gap-8 text-2xl font-display font-600">
+    <a href="#about" class="mobile-link">About</a>
+    <a href="#skills" class="mobile-link">Skills</a>
+    <a href="#projects" class="mobile-link">Projects</a>
+    <a href="#achievements" class="mobile-link">Achievements</a>
+    <a href="#contact" class="mobile-link">Contact</a>
+  </div>
+</div>
+
+<!-- ================= HERO ================= -->
+<section id="home" class="relative min-h-screen flex items-center pt-32 pb-20 px-6 overflow-hidden">
+  <div class="absolute inset-0 grid-fade pointer-events-none"></div>
+  <div class="absolute -top-32 -right-32 w-96 h-96 bg-indigo/20 rounded-full blur-3xl"></div>
+  <div class="absolute top-40 -left-32 w-80 h-80 bg-amber/20 rounded-full blur-3xl"></div>
+
+  <div class="relative max-w-4xl mx-auto w-full text-center">
+    <div class="reveal inline-flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-full border border-amber/40 text-amber-500 dark:text-amber bg-amber/5 mb-8">
+      <span class="w-1.5 h-1.5 rounded-full bg-amber animate-pulse"></span>
+      Kanpur, India · B.Tech AI &amp; ML, 2023–2027
+    </div>
+
+    <h1 class="reveal font-display text-5xl sm:text-6xl md:text-7xl font-800 tracking-tight leading-[1.05]">
+      Hi, I'm <span class="bg-gradient-to-r from-indigo to-amber bg-clip-text text-transparent">Nidhi Singh</span>
+    </h1>
+
+    <div class="reveal mt-6 flex items-center justify-center gap-3">
+      <div class="flex items-end gap-0.5 h-6">
+        <span class="wave-bar w-1 h-2 bg-indigo rounded-full" style="animation-delay:0s"></span>
+        <span class="wave-bar w-1 h-4 bg-indigo rounded-full" style="animation-delay:.15s"></span>
+        <span class="wave-bar w-1 h-6 bg-amber rounded-full" style="animation-delay:.3s"></span>
+        <span class="wave-bar w-1 h-3 bg-indigo rounded-full" style="animation-delay:.45s"></span>
+        <span class="wave-bar w-1 h-5 bg-amber rounded-full" style="animation-delay:.6s"></span>
+      </div>
+      <p class="font-mono text-lg sm:text-xl text-ink-900/70 dark:text-paper-100/70 h-8">
+        <span id="typed-text"></span><span id="typed-cursor" class="text-indigo">|</span>
+      </p>
+    </div>
+
+    <p class="reveal mt-6 max-w-xl mx-auto text-ink-900/70 dark:text-paper-100/60 leading-relaxed">
+      A motivated AI/ML student who builds user-focused, voice-first applications — with strong communication,
+      leadership, and event-coordination experience from campus ambassador and esports management roles.
+    </p>
+
+    <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-4">
+      <a href="#projects" class="px-6 py-3 rounded-full bg-ink-900 dark:bg-paper-50 text-paper-50 dark:text-ink-900 font-medium hover:opacity-90 transition shadow-lg shadow-indigo/20">
+        View my work
+      </a>
+      <a href="#contact" class="px-6 py-3 rounded-full border border-ink-900/15 dark:border-paper-100/15 font-medium hover:border-indigo hover:text-indigo transition">
+        Get in touch
+      </a>
+    </div>
+
+    <div class="reveal mt-12 flex items-center justify-center gap-5">
+      <a href="mailto:offemail2435@gmail.com" aria-label="Email" class="social-icon">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      </a>
+      <a href="tel:+916306589709" aria-label="Phone" class="social-icon">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a1.5 1.5 0 001.5-1.5v-2.03a1.5 1.5 0 00-1.108-1.448l-3.71-.993a1.5 1.5 0 00-1.588.523l-.881 1.19a11.25 11.25 0 01-6.204-6.204l1.19-.881a1.5 1.5 0 00.523-1.588l-.993-3.71A1.5 1.5 0 007.279 4.5H5.25a1.5 1.5 0 00-1.5 1.5z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/nidhi-singh-2115772a5" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-icon">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.15 1.45-2.15 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 110-4.14 2.07 2.07 0 010 4.14zM7.12 20.45H3.55V9h3.57v11.45z"/></svg>
+      </a>
+      <a href="https://github.com/Nidhisingh0z" target="_blank" rel="noopener" aria-label="GitHub" class="social-icon">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .5a12 12 0 00-3.79 23.39c.6.11.82-.26.82-.58v-2.16c-3.34.72-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.08 1.83 2.82 1.31 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.31-5.47-1.34-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.31-.54-1.54.12-3.22 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 016 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.68.24 2.91.12 3.22.77.84 1.24 1.91 1.24 3.22 0 4.6-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0012 .5z"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <a href="#about" class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce opacity-50">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+  </a>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="about" class="py-28 px-6">
+  <div class="max-w-4xl mx-auto">
+    <div class="reveal flex items-center gap-3 mb-10">
+      <span class="font-mono text-sm text-indigo">01</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-700">About Me</h2>
+      <div class="flex-1 h-px bg-ink-900/10 dark:bg-paper-100/10"></div>
+    </div>
+
+    <div class="grid md:grid-cols-5 gap-10 items-start">
+      <div class="reveal md:col-span-3 space-y-5 text-lg leading-relaxed text-ink-900/75 dark:text-paper-100/70">
+        <p>
+          I'm a B.Tech student specializing in AI &amp; Machine Learning at Maharana Pratap Group of Institutions
+          (2023–2027), based in Kanpur. I'm skilled in Python, web development fundamentals, and AI/ML
+          basics — with a particular interest in building applications that are genuinely accessible and
+          user-focused.
+        </p>
+        <p>
+          Beyond the technical side, I've coordinated campus events and esports tournaments and served as a
+          Google Gemini AI Campus Ambassador, which has sharpened my communication, leadership, and
+          public-speaking skills alongside my engineering ones.
+        </p>
+      </div>
+
+      <div class="reveal md:col-span-2">
+        <div class="rounded-2xl border border-ink-900/10 dark:border-paper-100/10 p-6 bg-ink-900/[0.02] dark:bg-paper-100/[0.02] font-mono text-sm space-y-3">
+          <div class="flex justify-between"><span class="opacity-50">name</span><span>Nidhi Singh</span></div>
+          <div class="flex justify-between"><span class="opacity-50">degree</span><span class="text-right">B.Tech AI &amp; ML</span></div>
+          <div class="flex justify-between"><span class="opacity-50">years</span><span>2023 – 2027</span></div>
+          <div class="flex justify-between"><span class="opacity-50">location</span><span>Kanpur, IN</span></div>
+          <div class="flex justify-between"><span class="opacity-50">languages</span><span>Hindi, English</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SKILLS ================= -->
+<section id="skills" class="py-28 px-6 bg-ink-900/[0.02] dark:bg-paper-100/[0.02]">
+  <div class="max-w-4xl mx-auto">
+    <div class="reveal flex items-center gap-3 mb-14">
+      <span class="font-mono text-sm text-indigo">02</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-700">Skills</h2>
+      <div class="flex-1 h-px bg-ink-900/10 dark:bg-paper-100/10"></div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-x-16 gap-8 mb-14">
+      <div class="skill-bar reveal" data-level="80">
+        <div class="flex justify-between mb-2 font-medium"><span>Python</span><span class="font-mono text-xs opacity-50 skill-pct">80%</span></div>
+        <div class="h-2 rounded-full bg-ink-900/10 dark:bg-paper-100/10"><div class="skill-fill h-full rounded-full bg-gradient-to-r from-indigo to-amber"></div></div>
+      </div>
+      <div class="skill-bar reveal" data-level="60">
+        <div class="flex justify-between mb-2 font-medium"><span>C</span><span class="font-mono text-xs opacity-50 skill-pct">60%</span></div>
+        <div class="h-2 rounded-full bg-ink-900/10 dark:bg-paper-100/10"><div class="skill-fill h-full rounded-full bg-gradient-to-r from-indigo to-amber"></div></div>
+      </div>
+      <div class="skill-bar reveal" data-level="70">
+        <div class="flex justify-between mb-2 font-medium"><span>HTML &amp; CSS</span><span class="font-mono text-xs opacity-50 skill-pct">70%</span></div>
+        <div class="h-2 rounded-full bg-ink-900/10 dark:bg-paper-100/10"><div class="skill-fill h-full rounded-full bg-gradient-to-r from-indigo to-amber"></div></div>
+      </div>
+      <div class="skill-bar reveal" data-level="65">
+        <div class="flex justify-between mb-2 font-medium"><span>SQL</span><span class="font-mono text-xs opacity-50 skill-pct">65%</span></div>
+        <div class="h-2 rounded-full bg-ink-900/10 dark:bg-paper-100/10"><div class="skill-fill h-full rounded-full bg-gradient-to-r from-indigo to-amber"></div></div>
+      </div>
+      <div class="skill-bar reveal" data-level="70">
+        <div class="flex justify-between mb-2 font-medium"><span>AI/ML Fundamentals</span><span class="font-mono text-xs opacity-50 skill-pct">70%</span></div>
+        <div class="h-2 rounded-full bg-ink-900/10 dark:bg-paper-100/10"><div class="skill-fill h-full rounded-full bg-gradient-to-r from-indigo to-amber"></div></div>
+      </div>
+      <div class="skill-bar reveal" data-level="75">
+        <div class="flex justify-between mb-2 font-medium"><span>Chatbot &amp; Speech Recognition</span><span class="font-mono text-xs opacity-50 skill-pct">75%</span></div>
+        <div class="h-2 rounded-full bg-ink-900/10 dark:bg-paper-100/10"><div class="skill-fill h-full rounded-full bg-gradient-to-r from-indigo to-amber"></div></div>
+      </div>
+      <div class="skill-bar reveal" data-level="80">
+        <div class="flex justify-between mb-2 font-medium"><span>Working with Claude (AI-Assisted Dev)</span><span class="font-mono text-xs opacity-50 skill-pct">80%</span></div>
+        <div class="h-2 rounded-full bg-ink-900/10 dark:bg-paper-100/10"><div class="skill-fill h-full rounded-full bg-gradient-to-r from-indigo to-amber"></div></div>
+      </div>
+    </div>
+
+    <div class="reveal grid sm:grid-cols-2 gap-6 mb-10">
+      <div>
+        <p class="text-sm font-mono opacity-50 mb-3">tools &amp; platforms</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="tag">Google Teachable Machine</span><span class="tag">Speech Recognition APIs</span>
+        </div>
+      </div>
+      <div>
+        <p class="text-sm font-mono opacity-50 mb-3">focus areas</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="tag">Chatbot Development</span><span class="tag">Accessibility</span><span class="tag">Product Thinking</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <p class="text-sm font-mono opacity-50 mb-3">soft skills</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="tag">Communication</span><span class="tag">Leadership</span><span class="tag">Team Collaboration</span>
+        <span class="tag">Adaptability</span><span class="tag">Research</span><span class="tag">Presentation Skills</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section id="projects" class="py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="reveal flex items-center gap-3 mb-14">
+      <span class="font-mono text-sm text-indigo">03</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-700">Projects</h2>
+      <div class="flex-1 h-px bg-ink-900/10 dark:bg-paper-100/10"></div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+
+      <article class="reveal card-hover group rounded-2xl border border-ink-900/10 dark:border-paper-100/10 p-6 flex flex-col bg-ink-900/[0.015] dark:bg-paper-100/[0.02] hover:border-indigo/50">
+        <div class="w-10 h-10 rounded-lg bg-indigo/10 text-indigo grid place-items-center mb-5">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg>
+        </div>
+        <h3 class="font-display font-600 text-lg mb-2">Voice-Integrated Chatbot with Speech Recognition</h3>
+        <p class="text-sm text-ink-900/65 dark:text-paper-100/60 mb-5 flex-1">
+          A chatbot that converts speech to text and generates voice-based responses, designed with a focus on
+          accessibility and virtual-assistant functionality for visually challenged users.
+        </p>
+        <div class="flex flex-wrap gap-1.5 mb-5">
+          <span class="tag-sm">Python</span><span class="tag-sm">Speech Recognition</span><span class="tag-sm">Accessibility</span>
+        </div>
+        <div class="flex gap-4 text-sm font-medium">
+          <a href="https://github.com/Nidhisingh0z" target="_blank" rel="noopener" class="opacity-60 hover:opacity-100 hover:underline">Code</a>
+        </div>
+      </article>
+
+      <article class="reveal card-hover group rounded-2xl border border-ink-900/10 dark:border-paper-100/10 p-6 flex flex-col bg-ink-900/[0.015] dark:bg-paper-100/[0.02] hover:border-amber/50">
+        <div class="w-10 h-10 rounded-lg bg-amber/10 text-amber-500 dark:text-amber grid place-items-center mb-5">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693M19.8 15.3l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>
+        </div>
+        <h3 class="font-display font-600 text-lg mb-2">Machine Learning Classification Project</h3>
+        <p class="text-sm text-ink-900/65 dark:text-paper-100/60 mb-5 flex-1">
+          Built a classification model using Google Teachable Machine, covering model training and
+          prediction testing end to end.
+        </p>
+        <div class="flex flex-wrap gap-1.5 mb-5">
+          <span class="tag-sm">Google Teachable Machine</span><span class="tag-sm">Classification</span>
+        </div>
+        <div class="flex gap-4 text-sm font-medium">
+          <a href="https://github.com/Nidhisingh0z" target="_blank" rel="noopener" class="opacity-60 hover:opacity-100 hover:underline">Code</a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= ACHIEVEMENTS ================= -->
+<section id="achievements" class="py-28 px-6 bg-ink-900/[0.02] dark:bg-paper-100/[0.02]">
+  <div class="max-w-4xl mx-auto">
+    <div class="reveal flex items-center gap-3 mb-14">
+      <span class="font-mono text-sm text-indigo">04</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-700">Experience &amp; Achievements</h2>
+      <div class="flex-1 h-px bg-ink-900/10 dark:bg-paper-100/10"></div>
+    </div>
+
+    <div class="space-y-4">
+      <div class="reveal flex gap-5 items-start p-5 rounded-xl border border-ink-900/10 dark:border-paper-100/10">
+        <div class="w-9 h-9 shrink-0 rounded-full bg-indigo/10 text-indigo grid place-items-center font-mono text-xs">01</div>
+        <div>
+          <h3 class="font-display font-600">Google Gemini AI Campus Ambassador</h3>
+          <p class="text-sm text-ink-900/60 dark:text-paper-100/55 mt-1">Promoted AI awareness initiatives and engaged students through campus activities.</p>
+        </div>
+      </div>
+      <div class="reveal flex gap-5 items-start p-5 rounded-xl border border-ink-900/10 dark:border-paper-100/10">
+        <div class="w-9 h-9 shrink-0 rounded-full bg-amber/10 text-amber-500 dark:text-amber grid place-items-center font-mono text-xs">02</div>
+        <div>
+          <h3 class="font-display font-600">Tech Spartan — Event Management &amp; Esports Coordination</h3>
+          <p class="text-sm text-ink-900/60 dark:text-paper-100/55 mt-1">Managed gaming events, participant coordination, and audience engagement.</p>
+        </div>
+      </div>
+      <div class="reveal flex gap-5 items-start p-5 rounded-xl border border-ink-900/10 dark:border-paper-100/10">
+        <div class="w-9 h-9 shrink-0 rounded-full bg-indigo/10 text-indigo grid place-items-center font-mono text-xs">03</div>
+        <div>
+          <h3 class="font-display font-600">Strong Public Speaking &amp; Communication</h3>
+          <p class="text-sm text-ink-900/60 dark:text-paper-100/55 mt-1">Developed through consistent event hosting, campus outreach, and team presentations.</p>
+        </div>
+      </div>
+      <div class="reveal flex gap-5 items-start p-5 rounded-xl border border-ink-900/10 dark:border-paper-100/10">
+        <div class="w-9 h-9 shrink-0 rounded-full bg-amber/10 text-amber-500 dark:text-amber grid place-items-center font-mono text-xs">04</div>
+        <div>
+          <h3 class="font-display font-600">Quick Learner, Startup-Ready</h3>
+          <p class="text-sm text-ink-900/60 dark:text-paper-100/55 mt-1">Adaptable to fast-paced startup and technical environments, with hands-on teamwork experience.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact" class="py-28 px-6">
+  <div class="max-w-4xl mx-auto">
+    <div class="reveal flex items-center gap-3 mb-14">
+      <span class="font-mono text-sm text-indigo">05</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-700">Let's Talk</h2>
+      <div class="flex-1 h-px bg-ink-900/10 dark:bg-paper-100/10"></div>
+    </div>
+
+    <div class="grid md:grid-cols-5 gap-10">
+      <div class="reveal md:col-span-2 space-y-6">
+        <p class="text-ink-900/70 dark:text-paper-100/60 leading-relaxed">
+          Open to internships, collaborations, and AI/ML opportunities. Feel free to reach out — I'd love to talk.
+        </p>
+        <div class="space-y-4 text-sm">
+          <a href="mailto:offemail2435@gmail.com" class="flex items-center gap-3 hover:text-indigo transition">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            offemail2435@gmail.com
+          </a>
+          <a href="tel:+916306589709" class="flex items-center gap-3 hover:text-indigo transition">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a1.5 1.5 0 001.5-1.5v-2.03a1.5 1.5 0 00-1.108-1.448l-3.71-.993a1.5 1.5 0 00-1.588.523l-.881 1.19a11.25 11.25 0 01-6.204-6.204l1.19-.881a1.5 1.5 0 00.523-1.588l-.993-3.71A1.5 1.5 0 007.279 4.5H5.25a1.5 1.5 0 00-1.5 1.5z"/></svg>
+            +91-6306589709
+          </a>
+          <a href="https://www.linkedin.com/in/nidhi-singh-2115772a5" target="_blank" rel="noopener" class="flex items-center gap-3 hover:text-indigo transition">
+            <svg class="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.15 1.45-2.15 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 110-4.14 2.07 2.07 0 010 4.14zM7.12 20.45H3.55V9h3.57v11.45z"/></svg>
+            linkedin.com/in/nidhi-singh-2115772a5
+          </a>
+          <a href="https://github.com/Nidhisingh0z" target="_blank" rel="noopener" class="flex items-center gap-3 hover:text-indigo transition">
+            <svg class="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .5a12 12 0 00-3.79 23.39c.6.11.82-.26.82-.58v-2.16c-3.34.72-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.08 1.83 2.82 1.31 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.31-5.47-1.34-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.31-.54-1.54.12-3.22 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 016 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.68.24 2.91.12 3.22.77.84 1.24 1.91 1.24 3.22 0 4.6-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0012 .5z"/></svg>
+            github.com/Nidhisingh0z
+          </a>
+          <div class="flex items-center gap-3 opacity-70">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+            Kanpur, India
+          </div>
+        </div>
+      </div>
+
+      <form id="contact-form" class="reveal md:col-span-3 space-y-4">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <input type="text" required placeholder="Your name" class="form-input" />
+          <input type="email" required placeholder="Your email" class="form-input" />
+        </div>
+        <input type="text" placeholder="Subject" class="form-input w-full" />
+        <textarea required rows="5" placeholder="Your message" class="form-input w-full resize-none"></textarea>
+        <button type="submit" class="w-full sm:w-auto px-8 py-3 rounded-full bg-ink-900 dark:bg-paper-50 text-paper-50 dark:text-ink-900 font-medium hover:opacity-90 transition">
+          Send message
+        </button>
+        <p id="form-status" class="text-sm text-amber-500 dark:text-amber hidden">Thanks! Your message has been noted (demo only — connect a backend to receive it).</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="py-8 px-6 border-t border-ink-900/10 dark:border-paper-100/10 text-center text-sm opacity-50">
+  © <span id="year"></span> Nidhi Singh. Built with Tailwind CSS.
+</footer>
+
+<style>
+  .tag { @apply font-mono text-xs px-3 py-1.5 rounded-full border border-ink-900/10 dark:border-paper-100/10 bg-ink-900/[0.02] dark:bg-paper-100/[0.03]; }
+  .tag-sm { @apply font-mono text-[11px] px-2.5 py-1 rounded-full bg-ink-900/[0.04] dark:bg-paper-100/[0.06]; }
+  .form-input { @apply px-4 py-3 rounded-xl bg-ink-900/[0.02] dark:bg-paper-100/[0.03] border border-ink-900/10 dark:border-paper-100/10 outline-none focus:border-indigo transition placeholder:text-ink-900/40 dark:placeholder:text-paper-100/30 text-sm; }
+  .social-icon { @apply w-10 h-10 grid place-items-center rounded-full border border-ink-900/10 dark:border-paper-100/10 hover:border-indigo hover:text-indigo transition; }
+  .mobile-link { @apply hover:text-indigo transition; }
+</style>
+
+<script>
+  // ---------- THEME TOGGLE ----------
+  const root = document.documentElement;
+  const themeBtn = document.getElementById('theme-toggle');
+  const sun = document.getElementById('icon-sun');
+  const moon = document.getElementById('icon-moon');
+
+  function applyTheme(t) {
+    if (t === 'dark') { root.classList.add('dark'); sun.classList.remove('hidden'); moon.classList.add('hidden'); }
+    else { root.classList.remove('dark'); sun.classList.add('hidden'); moon.classList.remove('hidden'); }
+  }
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(prefersDark ? 'dark' : 'light');
+
+  themeBtn.addEventListener('click', () => {
+    const isDark = root.classList.contains('dark');
+    applyTheme(isDark ? 'light' : 'dark');
+  });
+
+  // ---------- MOBILE MENU ----------
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+  document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+
+  // ---------- TYPING ANIMATION ----------
+  const phrases = ['AI/ML Student', 'Voice-Tech Builder', 'Chatbot Developer', 'Turning ideas into accessible AI'];
+  const typedEl = document.getElementById('typed-text');
+  let pIndex = 0, cIndex = 0, deleting = false;
+
+  function type() {
+    const phrase = phrases[pIndex];
+    if (!deleting) {
+      cIndex++;
+      typedEl.textContent = phrase.slice(0, cIndex);
+      if (cIndex === phrase.length) { deleting = true; setTimeout(type, 1600); return; }
+    } else {
+      cIndex--;
+      typedEl.textContent = phrase.slice(0, cIndex);
+      if (cIndex === 0) { deleting = false; pIndex = (pIndex + 1) % phrases.length; }
+    }
+    setTimeout(type, deleting ? 40 : 70);
+  }
+  type();
+
+  // ---------- SCROLL REVEAL ----------
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in-view'); revealObserver.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // ---------- SKILL BARS ----------
+  const skillBars = document.querySelectorAll('.skill-bar');
+  const skillObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const fill = e.target.querySelector('.skill-fill');
+        fill.style.width = e.target.dataset.level + '%';
+        skillObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  skillBars.forEach(el => skillObserver.observe(el));
+
+  // ---------- ACTIVE NAV HIGHLIGHTING ----------
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const id = entry.target.getAttribute('id');
+      const link = document.querySelector(`.nav-link[href="#${id}"]`);
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+  sections.forEach(s => navObserver.observe(s));
+
+  // ---------- CONTACT FORM (demo only, no backend) ----------
+  const form = document.getElementById('contact-form');
+  const status = document.getElementById('form-status');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    status.classList.remove('hidden');
+    form.reset();
+    setTimeout(() => status.classList.add('hidden'), 5000);
+  });
+
+  // ---------- FOOTER YEAR ----------
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
