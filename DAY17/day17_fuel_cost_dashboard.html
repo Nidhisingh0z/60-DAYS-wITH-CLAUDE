@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fuel & Ownership Cost Intelligence — Day 17</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#151b23; --panel2:#1c2530; --line:#2a3441;
+    --text:#e7edf3; --sub:#8a99ab;
+    --cng:#3fb68c; --diesel:#c97b3f; --ev:#4f8ff0; --petrol:#e0555a; --e85:#c9a13f;
+    --accent:#e0a63f;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;}
+  header{padding:36px 48px 20px;border-bottom:1px solid var(--line);}
+  header .eyebrow{color:var(--accent);letter-spacing:2px;font-size:12px;text-transform:uppercase;font-weight:600;}
+  header h1{margin:8px 0 6px;font-size:32px;}
+  header p{margin:0;color:var(--sub);font-size:14px;max-width:720px;line-height:1.5;}
+  main{padding:32px 48px 60px;max-width:1280px;margin:0 auto;}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:36px;}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px;}
+  .kpi .label{color:var(--sub);font-size:12px;text-transform:uppercase;letter-spacing:1px;}
+  .kpi .value{font-size:26px;font-weight:700;margin-top:6px;}
+  .kpi .sub{font-size:12px;color:var(--sub);margin-top:4px;}
+  section{margin-bottom:44px;}
+  h2{font-size:19px;margin-bottom:4px;}
+  .desc{color:var(--sub);font-size:13px;margin-bottom:18px;max-width:760px;line-height:1.5;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  @media(max-width:900px){.grid2{grid-template-columns:1fr;}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px;}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:12px;color:var(--sub);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);}
+  th{color:var(--sub);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
+  tr:hover td{background:var(--panel2);}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;}
+  .rank1{background:#1e3a2c;color:#5fd9a0;}
+  .rank-last{background:#3a1e1e;color:#e0888c;}
+  .insight{background:var(--panel2);border-left:3px solid var(--accent);border-radius:6px;padding:14px 18px;font-size:13.5px;line-height:1.6;color:#d5dde6;}
+  .insight b{color:#fff;}
+  footer{padding:24px 48px;color:var(--sub);font-size:12px;border-top:1px solid var(--line);}
+  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:13px;}
+  .bar-label{width:120px;flex-shrink:0;color:var(--sub);}
+  .bar-track{flex:1;background:var(--panel2);border-radius:4px;height:18px;position:relative;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:4px;}
+  .bar-val{width:70px;text-align:right;flex-shrink:0;font-weight:600;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Day 17 · Claude AI Mastery Challenge — Phase 3</div>
+  <h1>⛽ Fuel & Vehicle Ownership Cost Intelligence Dashboard</h1>
+  <p>A comparison of 5 fuel types — CNG, Diesel, Electric (EV), Petrol (E20), and E85 (Flex-Fuel) — across running cost, maintenance, CO₂ emissions, mileage and refuel time, based on a 52-vehicle dataset.</p>
+</header>
+
+<main>
+
+  <div class="kpis" id="kpis"></div>
+
+  <section>
+    <h2>Total Cost of Ownership — Fuel + Maintenance per km</h2>
+    <div class="desc">The single most important number for real-world decision-making: what it actually costs to drive one kilometre, all-in.</div>
+    <div class="card" id="cost-chart"></div>
+  </section>
+
+  <div class="grid2">
+    <section class="card">
+      <h2>CO₂ Emitted per km</h2>
+      <div class="desc">Lower is cleaner. E85's ethanol blend and EV's grid-based footprint pull emissions down.</div>
+      <div id="co2-chart"></div>
+    </section>
+    <section class="card">
+      <h2>Avg Refuel / Recharge Time</h2>
+      <div class="desc">Time cost matters too — EVs take far longer to "refuel" than liquid or gas fuels.</div>
+      <div id="refuel-chart"></div>
+    </section>
+  </div>
+
+  <section>
+    <h2>Full Comparison Table</h2>
+    <div class="desc">Averages across all sampled vehicles per fuel type.</div>
+    <div class="card">
+      <table id="table"></table>
+    </div>
+  </section>
+
+  <section>
+    <h2>E85 (Flex-Fuel) Economics — Special Focus</h2>
+    <div class="desc">E85 is marketed as an eco-friendly alternative. Here's how it actually stacks up financially.</div>
+    <div class="insight" id="e85-insight"></div>
+  </section>
+
+  <section>
+    <h2>Key Takeaways</h2>
+    <div class="card" id="takeaways"></div>
+  </section>
+
+</main>
+
+<footer>Generated with Claude · Dataset: day17_e85_dataset_optimised.csv (52 vehicle records, 5 fuel types) · Currency: INR</footer>
+
+<script>
+const data = {
+  "CNG":            {n:10, dist:1391.3, fuelCost:4645.6,  co2:173.87, maint:871.6,  costKm:3.34, co2Km:0.125, totalKm:3.97, price:80,  mileage:24.1, refuel:8},
+  "Diesel":         {n:9,  dist:1479.0, fuelCost:6831.1,  co2:262.22, maint:1309.6, costKm:4.62, co2Km:0.177, totalKm:5.50, price:91,  mileage:19.6, refuel:5},
+  "Electric (EV)":  {n:11, dist:1522.0, fuelCost:2668.5,  co2:138.55, maint:320.1,  costKm:1.75, co2Km:0.091, totalKm:1.96, price:12,  mileage:6.9,  refuel:45},
+  "Petrol (E20)":   {n:11, dist:1755.4, fuelCost:10900.0, co2:301.95, maint:713.5,  costKm:6.21, co2Km:0.172, totalKm:6.62, price:100, mileage:16.3, refuel:5},
+  "E85 (Flex-Fuel)":{n:11, dist:1504.3, fuelCost:9581.2,  co2:104.43, maint:639.9,  costKm:6.37, co2Km:0.069, totalKm:6.79, price:82,  mileage:12.9, refuel:5}
+};
+const colors = {"CNG":"var(--cng)","Diesel":"var(--diesel)","Electric (EV)":"var(--ev)","Petrol (E20)":"var(--petrol)","E85 (Flex-Fuel)":"var(--e85)"};
+const fuels = Object.keys(data);
+
+// KPIs
+const cheapest = fuels.reduce((a,b)=>data[a].totalKm<data[b].totalKm?a:b);
+const cleanest = fuels.reduce((a,b)=>data[a].co2Km<data[b].co2Km?a:b);
+const fastest = fuels.reduce((a,b)=>data[a].refuel<data[b].refuel?a:b);
+const priciest = fuels.reduce((a,b)=>data[a].totalKm>data[b].totalKm?a:b);
+document.getElementById('kpis').innerHTML = `
+  <div class="kpi"><div class="label">Cheapest to Run</div><div class="value">${cheapest}</div><div class="sub">₹${data[cheapest].totalKm.toFixed(2)} / km all-in</div></div>
+  <div class="kpi"><div class="label">Cleanest</div><div class="value">${cleanest}</div><div class="sub">${data[cleanest].co2Km.toFixed(3)} kg CO₂ / km</div></div>
+  <div class="kpi"><div class="label">Fastest Refuel</div><div class="value">${fastest}</div><div class="sub">${data[fastest].refuel} min avg</div></div>
+  <div class="kpi"><div class="label">Most Expensive</div><div class="value">${priciest}</div><div class="sub">₹${data[priciest].totalKm.toFixed(2)} / km all-in</div></div>
+`;
+
+function barChart(containerId, key, unit, decimals){
+  const max = Math.max(...fuels.map(f=>data[f][key]));
+  let html = '';
+  fuels.slice().sort((a,b)=>data[b][key]-data[a][key]).forEach(f=>{
+    const val = data[f][key];
+    const pct = (val/max*100).toFixed(1);
+    html += `<div class="bar-row">
+      <div class="bar-label">${f}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${colors[f]}"></div></div>
+      <div class="bar-val">${val.toFixed(decimals)} ${unit}</div>
+    </div>`;
+  });
+  document.getElementById(containerId).innerHTML = html;
+}
+barChart('cost-chart','totalKm','₹/km',2);
+barChart('co2-chart','co2Km','kg/km',3);
+barChart('refuel-chart','refuel','min',0);
+
+// Table
+let thead = '<tr><th>Fuel Type</th><th>Sample</th><th>Avg Fuel Cost</th><th>Avg Maint.</th><th>Total ₹/km</th><th>CO₂ kg/km</th><th>Mileage</th><th>Refuel (min)</th></tr>';
+let rows = '';
+fuels.slice().sort((a,b)=>data[a].totalKm-data[b].totalKm).forEach((f,i)=>{
+  const d = data[f];
+  const pill = i===0 ? '<span class="pill rank1">Best value</span>' : (i===fuels.length-1 ? '<span class="pill rank-last">Priciest</span>' : '');
+  rows += `<tr><td>${f} ${pill}</td><td>${d.n}</td><td>₹${d.fuelCost.toFixed(0)}</td><td>₹${d.maint.toFixed(0)}</td><td><b>₹${d.totalKm.toFixed(2)}</b></td><td>${d.co2Km.toFixed(3)}</td><td>${d.mileage.toFixed(1)}</td><td>${d.refuel}</td></tr>`;
+});
+document.getElementById('table').innerHTML = thead + rows;
+
+// E85 insight
+const e85 = data["E85 (Flex-Fuel)"];
+document.getElementById('e85-insight').innerHTML = `
+  E85 is the <b>cleanest liquid fuel</b> in this dataset at <b>${e85.co2Km.toFixed(3)} kg CO₂/km</b> — even beating EV on emissions per km in this sample.
+  However, it is also the <b>most expensive to run</b> at <b>₹${e85.totalKm.toFixed(2)}/km</b> all-in, largely because its mileage (${e85.mileage.toFixed(1)} km/unit) is far lower than Petrol or Diesel,
+  so more fuel is burned — and bought — per kilometre despite a moderate price per unit (₹${e85.price}).
+  <br><br>
+  <b>Verdict:</b> E85 makes sense for owners who prioritize lower tailpipe CO₂ and already own flex-fuel-capable vehicles, but it is not currently the economical choice
+  purely on running cost — EV and CNG both undercut it substantially.
+`;
+
+// Takeaways
+document.getElementById('takeaways').innerHTML = `
+  <ul style="line-height:1.9;font-size:14px;">
+    <li><b>Electric (EV)</b> is the cheapest to run overall (₹${data["Electric (EV)"].totalKm.toFixed(2)}/km) thanks to a very low per-unit energy price and the lowest maintenance cost — but has by far the longest recharge time (${data["Electric (EV)"].refuel} min).</li>
+    <li><b>CNG</b> is the best all-round balance: low running cost (₹${data["CNG"].totalKm.toFixed(2)}/km), fast refuel (${data["CNG"].refuel} min), and moderate emissions.</li>
+    <li><b>Diesel</b> sits mid-pack on cost but has the highest maintenance burden (₹${data["Diesel"].maint.toFixed(0)} avg) among liquid/gas fuels.</li>
+    <li><b>Petrol (E20)</b> is the most expensive per km to run (₹${data["Petrol (E20)"].totalKm.toFixed(2)}/km) in this sample, despite fast refuelling.</li>
+    <li><b>E85</b> wins on emissions but loses on cost — a trade-off, not a free upgrade.</li>
+  </ul>
+`;
+</script>
+</body>
+</html>
