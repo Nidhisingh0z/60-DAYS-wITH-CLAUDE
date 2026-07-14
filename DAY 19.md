@@ -132,6 +132,7 @@ Rivalry to dive into: Messi vs Ronaldo — the greatest individual rivalry in fo
 📋 Final Output: Your Football Intelligence Profile
 CategoryResultWC 2026 Predicted WinnerArgentina (78% confidence)Predicted Runner-UpSpain (65% confidence)Dark HorseMorocco (55% confidence)Players to WatchMessi, Mbappé, Haaland, BellinghamFootball Awareness Score60/100Fan ClassificationFootball FollowerMessi Compatibility78%Ronaldo Compatibility52%Personality ArchetypeQuiet LeaderRecommended PlayerLionel MessiRecommended ClubFC BarcelonaRecommended National TeamArgentinaRecommended RivalryMessi vs Ronaldo
 Key Insight: You're a grounded, team-oriented thinker with strong foundational football knowledge and room to grow on tournament history. Your personality closely mirrors Messi's quiet-but-devastating leadership style — someone who lets results speak louder than words. As you dig deeper into World Cup history and player storylines, your awareness score has real room to climb toward "Football Enthusiast" territory.
-![Screenshot](https://github.com/username/repo/blob/main/images/screenshot.png?raw=true)
+<img width="1095" height="902" alt="Screenshot 2026-07-14 093135" src="https://github.com/user-attachments/assets/d4f7caa3-e1ac-4f33-bd3d-d200088dbeb4" />
+
 
 
