@@ -1102,3 +1102,10 @@
 </script>
 </body>
 </html>
+
+SCREENSHOTS:
+<img width="1570" height="1032" alt="Screenshot 2026-07-16 114434" src="https://github.com/user-attachments/assets/1b63c6e7-3651-459d-b8da-6d07867450e0" />
+<img width="1418" height="960" alt="Screenshot 2026-07-16 114457" src="https://github.com/user-attachments/assets/3a8d7f8b-a5ff-4be7-bbe4-cf20e3d894ae" />
+<img width="817" height="756" alt="Screenshot 2026-07-16 114551" src="https://github.com/user-attachments/assets/beb1ce3d-a4ba-4b20-b064-7cf0a9fda325" />
+
+
