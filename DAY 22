@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>View PDF</title>
+</head>
+<body>
+  <h2>Embedded PDF Example</h2>
+  <embed src="C:\Users\Nidhi\Downloads\PocketVet_Startup_Validation_Report.pdf" type="application/pdf" width="100%" height="600px" />
+</body>
+</html>
+<!--FieldAnswer1Startup IdeaPocketVet — an app connecting pet owners in India's Tier 2/3 cities with on-demand vet video consultations, backed by an AI symptom-triage chatbot2ProblemPet owners outside metro cities often have no qualified vet within reasonable distance/hours; they rely on pharmacists, Google, or delay care until it's an emergency3Target CustomersUrban/semi-urban dog & cat owners, age 25–45, middle income, in Tier 2/3 Indian cities (Varanasi, Indore, Lucknow, Coimbatore, etc.)4WhyFounder couldn't find a vet at 11pm for a sick puppy in a Tier 2 city; noticed pet ownership is booming in these cities but vet infrastructure hasn't caught up5Existing ValidationNo paying users yet. Informal survey of 150 pet owners in regional Facebook/WhatsApp groups: 61% said they'd pay ₹199–₹499 for on-demand vet chat; 12 vets contacted, 4 expressed interest in joining as providers6MarketIndia, launching Tier 2/3 cities first, metro expansion later7TypeStartup — VC-scale ambition, aiming to become a broader pet-health platform
+I picked PocketVet — an on-demand vet video/AI-triage app for pet owners in Tier 2/3 Indian cities — and built the full 15-section report (Executive Summary, Founder-Market Fit, TAM/SAM/SOM, Competitor & Gap Analysis, ICP, Persona, Pain Points, Journey, Risk Matrix, Pivots, Go/No-Go, 30-Day Plan), styled with tables, score bars, and color-coded risk levels, verdict: Conditional Go.-->
