@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧩 Prompt Puzzle — Master AI Prompting Through Play</title>
+<style>
+  :root{
+    --bg1:#0b0b16;
+    --bg2:#12122a;
+    --card:#191934cc;
+    --card-solid:#1b1b3a;
+    --border:#33335a;
+    --accent1:#8b5cf6;
+    --accent2:#22d3ee;
+    --accent3:#f472b6;
+    --success:#34d399;
+    --warning:#fbbf24;
+    --danger:#fb7185;
+    --text:#f1f0ff;
+    --muted:#a7a3c9;
+    --radius:16px;
+    --shadow: 0 10px 40px rgba(0,0,0,0.45);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: radial-gradient(circle at 20% 0%, #201a3d 0%, var(--bg1) 45%, #060610 100%);
+    color:var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  #app{
+    max-width:1100px;
+    margin:0 auto;
+    padding:28px 20px 80px;
+    position:relative;
+    z-index:1;
+  }
+  ::selection{ background: var(--accent1); color:white; }
+
+  /* Background ambient blobs */
+  .blob{
+    position:fixed; border-radius:50%; filter:blur(90px); opacity:0.35; z-index:0; pointer-events:none;
+    animation: float 14s ease-in-out infinite;
+  }
+  .blob1{ width:380px;height:380px; background:var(--accent1); top:-120px; left:-100px; }
+  .blob2{ width:320px;height:320px; background:var(--accent2); bottom:-100px; right:-80px; animation-delay:3s;}
+  .blob3{ width:260px;height:260px; background:var(--accent3); top:40%; right:20%; animation-delay:6s;}
+  @keyframes float{
+    0%,100%{ transform: translateY(0) translateX(0); }
+    50%{ transform: translateY(-30px) translateX(20px); }
+  }
+
+  h1,h2,h3{ margin:0; }
+  .title-bar{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:12px;
+  }
+  .brand{
+    font-size:26px; font-weight:800; letter-spacing:-0.5px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent1), var(--accent3));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    background-size:200% auto;
+    animation: shine 6s linear infinite;
+  }
+  @keyframes shine{ to{ background-position: 200% center; } }
+  .badge{
+    font-size:12px; padding:6px 12px; border-radius:999px; border:1px solid var(--border);
+    background: var(--card); color:var(--muted); font-weight:600;
+  }
+  .hud{
+    display:flex; gap:10px; flex-wrap:wrap;
+  }
+  .hud .chip{
+    background:var(--card); border:1px solid var(--border); border-radius:12px;
+    padding:8px 14px; font-size:13px; font-weight:600; color:var(--muted);
+    display:flex; align-items:center; gap:6px;
+    transition: all .25s ease;
+  }
+  .hud .chip b{ color:var(--text); font-size:14px; }
+  .hud .chip.score b{ color:var(--accent2); }
+
+  .card{
+    background: var(--card);
+    border:1px solid var(--border);
+    border-radius: var(--radius);
+    padding:26px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(14px);
+    animation: fadeUp .5s ease both;
+  }
+  @keyframes fadeUp{
+    from{ opacity:0; transform: translateY(14px); }
+    to{ opacity:1; transform:none; }
+  }
+
+  /* Buttons */
+  .btn{
+    border:none; cursor:pointer; font-weight:700; border-radius:12px; padding:12px 22px;
+    font-size:14.5px; color:white; transition: transform .15s ease, box-shadow .25s ease, opacity .2s;
+    background: linear-gradient(135deg, var(--accent1), var(--accent2));
+    box-shadow: 0 6px 20px rgba(139,92,246,0.35);
+  }
+  .btn:hover{ transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 26px rgba(139,92,246,0.5); }
+  .btn:active{ transform: translateY(0) scale(0.98); }
+  .btn.secondary{
+    background: transparent; border:1px solid var(--border); color:var(--text); box-shadow:none;
+  }
+  .btn.secondary:hover{ border-color: var(--accent2); color:var(--accent2); }
+  .btn.ghost{
+    background:transparent; border:1px dashed var(--border); color:var(--muted); box-shadow:none; font-size:13px; padding:8px 14px;
+  }
+  .btn:disabled{ opacity:0.4; cursor:not-allowed; transform:none !important; }
+
+  /* Start screen */
+  .start-hero{ text-align:center; padding:40px 10px 10px; }
+  .start-hero h1{ font-size:38px; font-weight:800; margin-bottom:10px; }
+  .start-hero p{ color:var(--muted); font-size:15.5px; max-width:560px; margin:0 auto 26px; line-height:1.6; }
+  .setup-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:26px 0; }
+  .setup-item{
+    background:var(--card-solid); border:1px solid var(--border); border-radius:14px; padding:18px; text-align:left;
+  }
+  .setup-item .label{ font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); font-weight:700; }
+  .setup-item .value{ font-size:19px; font-weight:800; margin-top:6px; background:linear-gradient(90deg,var(--accent2),var(--accent1)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .how{ text-align:left; margin-top:24px; display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .how .item{ background:var(--card-solid); border:1px solid var(--border); border-radius:12px; padding:14px; }
+  .how .item .num{ font-size:12px; color:var(--accent2); font-weight:800; }
+  .how .item .txt{ font-size:13px; color:var(--muted); margin-top:6px; line-height:1.5;}
+
+  /* Progress */
+  .progress-wrap{ margin:18px 0 26px; }
+  .progress-track{ height:8px; border-radius:999px; background:#232345; overflow:hidden; position:relative; }
+  .progress-fill{ height:100%; border-radius:999px; background:linear-gradient(90deg,var(--accent2),var(--accent1)); transition: width .5s ease; }
+  .dots{ display:flex; gap:8px; margin-top:10px; justify-content:center; flex-wrap:wrap;}
+  .dot{ width:10px;height:10px;border-radius:50%; background:#2b2b52; border:1px solid var(--border); transition:.3s;}
+  .dot.done{ background:var(--success); }
+  .dot.active{ background:var(--accent2); transform:scale(1.3); box-shadow:0 0 0 4px rgba(34,211,238,0.2); }
+
+  /* Scenario */
+  .scenario-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; margin-bottom:6px;}
+  .scenario-type{ font-size:12px; font-weight:800; letter-spacing:0.5px; padding:5px 12px; border-radius:999px; text-transform:uppercase; }
+  .scenario-type.build{ background:rgba(139,92,246,0.18); color:#c4b5fd; border:1px solid rgba(139,92,246,0.4); }
+  .scenario-type.clean{ background:rgba(34,211,238,0.15); color:#67e8f9; border:1px solid rgba(34,211,238,0.4); }
+  .scenario-type.choose{ background:rgba(244,114,182,0.15); color:#f9a8d4; border:1px solid rgba(244,114,182,0.4); }
+  .scenario-title{ font-size:21px; font-weight:800; margin:6px 0 4px; }
+  .desired-output{
+    background: rgba(34,211,238,0.07); border:1px solid rgba(34,211,238,0.25); border-radius:12px; padding:14px 16px;
+    font-size:14px; color:var(--muted); margin-bottom:18px; line-height:1.55;
+  }
+  .desired-output b{ color:var(--accent2); }
+
+  .section-label{ font-size:12px; text-transform:uppercase; letter-spacing:0.8px; color:var(--muted); font-weight:800; margin:18px 0 10px; }
+
+  /* Pool + Assembly (Build challenge) */
+  .pool, .assembly{
+    display:flex; flex-wrap:wrap; gap:10px; min-height:60px; padding:12px; border-radius:14px;
+  }
+  .pool{ background:#14142c; border:1px solid var(--border); }
+  .assembly{ background: rgba(139,92,246,0.06); border:2px dashed var(--accent1); }
+  .assembly.dragover{ background: rgba(139,92,246,0.16); border-color: var(--accent2); }
+  .assembly.empty::after{ content:"Drag blocks here to build your prompt, in the right order ✍️"; color:var(--muted); font-size:13px; padding:8px; }
+
+  .chip-block{
+    background: var(--card-solid); border:1px solid var(--border); border-radius:10px; padding:10px 14px;
+    font-size:13.5px; cursor:grab; user-select:none; transition: all .2s ease; position:relative;
+    max-width:100%;
+  }
+  .chip-block:hover{ border-color:var(--accent2); transform: translateY(-2px); }
+  .chip-block.in-assembly{ background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(34,211,238,0.15)); border-color:var(--accent1); cursor:pointer; }
+  .chip-block .remove-x{ margin-left:8px; color:var(--danger); font-weight:800; }
+  .chip-block.dragging{ opacity:0.4; }
+  .chip-block.hint-glow{ animation: glow 1.2s ease infinite; border-color:var(--warning) !important; }
+  @keyframes glow{ 0%,100%{ box-shadow:0 0 0px var(--warning);} 50%{ box-shadow:0 0 16px var(--warning);} }
+
+  /* Clean challenge */
+  .messy-list{ display:flex; flex-direction:column; gap:10px; }
+  .messy-item{
+    background:var(--card-solid); border:1px solid var(--border); border-radius:12px; padding:12px 16px; font-size:14px;
+    cursor:pointer; transition:.2s; display:flex; align-items:center; gap:10px;
+  }
+  .messy-item:hover{ border-color:var(--accent2); }
+  .messy-item.removed{ opacity:0.45; text-decoration:line-through; background:rgba(251,113,133,0.08); border-color:rgba(251,113,133,0.4);}
+  .messy-item .toggle-icon{ font-size:16px; }
+
+  /* Choose challenge */
+  .choice-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  @media(max-width:800px){ .choice-grid{ grid-template-columns:1fr; } .setup-grid{grid-template-columns:1fr;} .how{grid-template-columns:1fr;} }
+  .choice-card{
+    background:var(--card-solid); border:1px solid var(--border); border-radius:14px; padding:16px; cursor:pointer;
+    transition: all .2s ease; position:relative; min-height:150px; display:flex; flex-direction:column;
+  }
+  .choice-card:hover{ transform: translateY(-4px); border-color:var(--accent2); box-shadow:0 8px 24px rgba(34,211,238,0.15); }
+  .choice-card.selected{ border-color:var(--accent1); background: rgba(139,92,246,0.14); }
+  .choice-card.correct{ border-color:var(--success) !important; background: rgba(52,211,153,0.12) !important; }
+  .choice-card.incorrect{ border-color:var(--danger) !important; background: rgba(251,113,133,0.1) !important; }
+  .choice-letter{ font-weight:800; color:var(--accent2); font-size:13px; margin-bottom:8px; }
+  .choice-text{ font-size:13px; color:var(--text); line-height:1.5; flex:1; }
+  .choice-output{ margin-top:10px; font-size:12px; color:var(--muted); border-top:1px solid var(--border); padding-top:8px; display:none; line-height:1.5;}
+  .choice-output.show{ display:block; }
+  .choice-verdict{ font-size:11px; font-weight:800; margin-top:8px; text-transform:uppercase; letter-spacing:0.5px; }
+
+  .action-row{ display:flex; gap:10px; justify-content:flex-end; margin-top:22px; flex-wrap:wrap; align-items:center; }
+  .action-row .spacer{ flex:1; }
+
+  /* Feedback panel */
+  .feedback-box{ text-align:center; padding:8px 0 4px; }
+  .feedback-icon{ font-size:52px; margin-bottom:6px; }
+  .feedback-title{ font-size:22px; font-weight:800; margin-bottom:6px; }
+  .feedback-points{ font-size:15px; color:var(--accent2); font-weight:700; margin-bottom:18px; }
+  .compare-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; text-align:left; margin:18px 0; }
+  @media(max-width:800px){ .compare-grid{ grid-template-columns:1fr; } }
+  .compare-col{ background:var(--card-solid); border:1px solid var(--border); border-radius:12px; padding:14px; }
+  .compare-col.weak{ border-color:rgba(251,113,133,0.4); }
+  .compare-col.opt{ border-color:rgba(52,211,153,0.4); }
+  .compare-col h4{ font-size:12px; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:8px; }
+  .compare-col.weak h4{ color:var(--danger); }
+  .compare-col.opt h4{ color:var(--success); }
+  .compare-col p{ font-size:13px; color:var(--muted); line-height:1.55; margin:0; }
+  .principle-box{
+    background: rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.35); border-radius:12px; padding:14px 16px;
+    font-size:13.5px; color:#fde68a; text-align:left; margin-top:6px; line-height:1.6;
+  }
+  .principle-box b{ color:var(--warning); }
+
+  /* Toasts */
+  #toast-container{ position:fixed; top:20px; right:20px; z-index:999; display:flex; flex-direction:column; gap:10px; }
+  .toast{
+    background: var(--card-solid); border:1px solid var(--border); border-radius:12px; padding:12px 18px;
+    font-size:13.5px; font-weight:600; box-shadow: var(--shadow); min-width:220px;
+    animation: slideIn .35s ease both;
+    display:flex; align-items:center; gap:10px;
+  }
+  .toast.leaving{ animation: slideOut .35s ease both; }
+  .toast.success{ border-color: var(--success); }
+  .toast.error{ border-color: var(--danger); }
+  .toast.info{ border-color: var(--accent2); }
+  .toast.warn{ border-color: var(--warning); }
+  @keyframes slideIn{ from{ opacity:0; transform: translateX(40px); } to{ opacity:1; transform:none; } }
+  @keyframes slideOut{ from{ opacity:1; transform:none;} to{ opacity:0; transform: translateX(40px);} }
+
+  /* Report screen */
+  .report-hero{ text-align:center; padding:10px 0 20px; }
+  .report-score{ font-size:64px; font-weight:900; background:linear-gradient(90deg,var(--accent2),var(--accent1),var(--accent3)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .report-rank{ font-size:20px; font-weight:800; margin-top:6px; }
+  .report-rating{ color:var(--muted); font-size:14px; margin-top:4px; }
+  .stats-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:24px 0; }
+  @media(max-width:800px){ .stats-grid{ grid-template-columns:repeat(2,1fr);} }
+  .stat-card{ background:var(--card-solid); border:1px solid var(--border); border-radius:12px; padding:14px; text-align:center; }
+  .stat-card .num{ font-size:22px; font-weight:800; color:var(--accent2); }
+  .stat-card .lab{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:4px; }
+
+  .dna-row{ display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+  .dna-label{ width:150px; font-size:13px; color:var(--muted); font-weight:600; flex-shrink:0; }
+  .dna-track{ flex:1; height:12px; background:#232345; border-radius:999px; overflow:hidden; }
+  .dna-fill{ height:100%; border-radius:999px; background:linear-gradient(90deg,var(--accent1),var(--accent2)); transition: width 1s ease; }
+  .dna-val{ width:42px; text-align:right; font-size:12px; color:var(--text); font-weight:700; }
+
+  .feedback-text{ background:rgba(139,92,246,0.08); border:1px solid rgba(139,92,246,0.3); border-radius:12px; padding:16px; font-size:14px; line-height:1.6; color:var(--text); margin:18px 0; }
+  .milestone-box{ background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.3); border-radius:12px; padding:16px; font-size:14px; line-height:1.6; margin-bottom:18px; }
+  .final-prompt-box{ background:#0e0e22; border:1px solid var(--border); border-radius:12px; padding:16px; font-family: 'Courier New', monospace; font-size:13px; color:#c4b5fd; line-height:1.7; white-space:pre-wrap; }
+
+  .fade-in{ animation: fadeUp .45s ease both; }
+  .pulse{ animation: pulse 0.6s ease; }
+  @keyframes pulse{ 0%{ transform:scale(1);} 50%{ transform:scale(1.08);} 100%{ transform:scale(1);} }
+
+  ::-webkit-scrollbar{ width:8px; }
+  ::-webkit-scrollbar-thumb{ background:var(--border); border-radius:8px; }
+</style>
+</head>
+<body>
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div class="blob blob3"></div>
+<div id="toast-container"></div>
+<div id="app"></div>
+
+<script>
+/* =========================================================
+   🧩 PROMPT PUZZLE — DATA LAYER
+   Domain: Creative Writing & Storytelling | Difficulty: Advanced
+========================================================= */
+const DOMAIN = "Creative Writing & Storytelling";
+const DIFFICULTY = "Advanced";
+
+const SCENARIOS = [
+  {
+    id: 1,
+    title: "Noir Detective Opening — Floating City",
+    desiredOutput: "A 100–150 word first-person noir opening paragraph set in a detective city that floats above storm clouds, rich in sensory detail, ending on a line of foreshadowing.",
+    correctBlocks: [
+      "You are a bestselling noir fiction author known for atmospheric, sensory-rich prose.",
+      "Write the opening paragraph (100–150 words) of a detective novel set in a city that floats above perpetual storm clouds.",
+      "Use first-person narration from a world-weary detective protagonist.",
+      "Include at least two concrete sensory details (sound, smell, or texture) that establish mood.",
+      "End the paragraph with a subtle line of foreshadowing about a case gone wrong.",
+      "Avoid clichés like 'dark and stormy night' or 'rain-slicked streets'."
+    ],
+    distractorBlocks: [
+      "Explain the entire plot of the novel in bullet points.",
+      "Insert exactly 5 emojis to indicate the mood.",
+      "Write it as a formal business memo to the city council.",
+      "Make the paragraph at least 2000 words long.",
+      "List every character's full biography before the story begins."
+    ],
+    weakPrompt: "Write a detective story opening in a floating city.",
+    optimizedPrompt: "You are a bestselling noir fiction author known for atmospheric, sensory-rich prose. Write the opening paragraph (100–150 words) of a detective novel set in a city that floats above perpetual storm clouds, narrated in first person by a world-weary detective. Include at least two concrete sensory details, avoid clichés like 'rain-slicked streets', and end with a subtle line of foreshadowing.",
+    overEngineeredPrompt: "You are a bestselling noir fiction author. Write the opening paragraph (100–150 words) of a detective novel set in a floating city, first person, world-weary detective, two sensory details, no clichés, foreshadowing ending — AND also include a haiku summary, a full color palette description, exactly 3 metaphors, a title in Latin, and rewrite the entire paragraph twice in two different tenses for comparison.",
+    weakOutput: "The city floated in the sky. It was a dangerous place. The detective walked around looking for clues about the crime that happened.",
+    optimizedOutput: "The city hung like a broken chandelier above the clouds, and I could taste ozone every time the turbines coughed. Somewhere below the mist, a woman was screaming into a radio no one would ever answer. I lit a cigarette I couldn't afford and told myself this was just another missing-persons case — the kind that never stays that simple.",
+    overOutput: "Confused, overloaded paragraph mixing a haiku, a color palette list, forced metaphors, a Latin title, and two clashing tense versions — the noir mood is lost under conflicting instructions.",
+    hint: "Think: Role + Format/Length + POV + Sensory detail + What to avoid + Ending hook.",
+    principle: "Specificity + Role + Constraints outperform vague requests — but stacking unrelated extra demands (haiku + tenses + palettes) overloads the model and dilutes creative focus. Precision beats volume."
+  },
+  {
+    id: 2,
+    title: "Fantasy Worldbuilding — The Living Library",
+    desiredOutput: "A vivid 80–120 word description of a magical library where books whisper their contents, written in immersive third-person present tense for a YA fantasy audience.",
+    correctBlocks: [
+      "Act as a fantasy worldbuilder crafting immersive settings for a YA fantasy novel.",
+      "Describe a magical library (80–120 words) where books whisper fragments of their contents when touched.",
+      "Write in third-person present tense to create immediacy.",
+      "Use one unusual, non-generic magical rule specific to this library (not generic 'floating candles').",
+      "Appeal to at least two senses beyond sight.",
+      "Keep tone wondrous rather than frightening, suited to a YA audience."
+    ],
+    distractorBlocks: [
+      "Include a full index of every book title in the library.",
+      "Write the description as a legal contract.",
+      "Use only one-syllable words throughout.",
+      "Make it a horror scene with graphic violence.",
+      "Provide the library's complete architectural blueprint in metric units."
+    ],
+    weakPrompt: "Describe a magical library.",
+    optimizedPrompt: "Act as a fantasy worldbuilder for a YA novel. Describe a magical library (80–120 words) where books whisper fragments of their contents when touched, written in third-person present tense. Include one unusual magical rule unique to this library, appeal to at least two senses beyond sight, and keep the tone wondrous rather than frightening.",
+    overEngineeredPrompt: "Act as a fantasy worldbuilder for a YA novel. Describe a magical library (80–120 words), whispering books, third-person present tense, one unique rule, two senses, wondrous tone — PLUS include a full census of librarian ghosts, a 12-point magic system rulebook, footnotes citing in-world history, and a rhyming couplet after every sentence.",
+    weakOutput: "The library was big and magical. There were lots of books. Some of them glowed. It was a cool place to visit.",
+    optimizedOutput: "Dust motes drift like slow gold snow between shelves that curve upward into darkness. The moment your fingers brush a spine, the book exhales — a papery whisper of its first line, warm as breath against your ear. Somewhere above, unseen pages turn themselves, and the whole room smells of cinnamon and old rain.",
+    overOutput: "A cluttered passage juggling ghost censuses, rulebooks, footnotes, and forced rhyming couplets — the sensory wonder of the whispering books is buried under bureaucratic worldbuilding clutter.",
+    hint: "Think: Role + Task/Length + Tense + Unique rule + Sensory range + Tone.",
+    principle: "Naming a *specific, unusual* rule (whispering books) beats generic magic tropes. Over-engineering with rulebooks and footnotes turns an evocative snapshot into an encyclopedia entry — creative prompts need room to breathe."
+  },
+  {
+    id: 3,
+    title: "Villain Backstory Reveal",
+    desiredOutput: "A 100-word first-person confession from a villain revealing the singular betrayal that turned them, with restrained, quietly chilling tone (no melodrama).",
+    correctBlocks: [
+      "You are a character writer specializing in morally complex antagonists.",
+      "Write a 100-word first-person confession from a villain explaining the exact moment they turned.",
+      "Center the reveal on one specific betrayal by someone the villain trusted.",
+      "Keep the tone quiet and restrained rather than melodramatic or over-the-top.",
+      "Do not have the villain call themselves 'evil' or 'a monster' directly — show, don't tell."
+    ],
+    distractorBlocks: [
+      "Make the villain laugh maniacally at least three times.",
+      "Include a complete timeline of world events for the past 500 years.",
+      "Write the confession entirely in rhyming verse.",
+      "Have the villain break the fourth wall and address the reader directly as 'dear reader'.",
+      "Reveal all of the villain's future plans in explicit detail."
+    ],
+    weakPrompt: "Write a villain's backstory about why they became evil.",
+    optimizedPrompt: "You are a character writer specializing in morally complex antagonists. Write a 100-word first-person confession from a villain explaining the exact moment they turned, centered on one specific betrayal by someone they trusted. Keep the tone quiet and restrained, not melodramatic — show the change rather than stating 'I became evil'.",
+    overEngineeredPrompt: "Write a 100-word first-person villain confession, one betrayal, restrained tone, show don't tell — PLUS include maniacal laughter three times, a 500-year historical timeline, full rhyming verse structure, fourth-wall reader address, and a complete list of future evil plans.",
+    weakOutput: "I became evil because bad things happened to me. Now I want revenge on everyone. I am the villain of this story and nothing will stop me.",
+    optimizedOutput: "She handed the letter to the tribunal herself. My own sister. I remember the silence more than the verdict — how she wouldn't look up from her hands. I didn't burn the village that week. I waited three years, learned patience is its own kind of fire, and made sure she was the one who opened the door.",
+    overOutput: "An overstuffed monologue mixing cackling villain clichés, a centuries-long history lecture, rhyming couplets, and reader asides — the quiet, chilling betrayal reveal is completely buried.",
+    hint: "Think: Role + Format/Length + Specific betrayal focus + Restrained tone + Show-don't-tell rule.",
+    principle: "Constraining tone explicitly ('restrained, not melodramatic') and banning the obvious cliché ('I am evil') forces higher-quality, subtler writing. Piling on unrelated devices (rhyme, fourth-wall breaks, timelines) actively fights the desired tone."
+  },
+  {
+    id: 4,
+    title: "Screenplay Confrontation Scene",
+    desiredOutput: "A tense 12–16 line screenplay-formatted dialogue scene between two former allies who now distrust each other, using subtext instead of stated emotion.",
+    correctBlocks: [
+      "You are a screenwriter skilled in tense, subtext-driven dialogue.",
+      "Write a 12–16 line scene in proper screenplay format (character names in caps, action lines in italics-style brackets).",
+      "The scene is between two former allies who no longer trust each other.",
+      "Neither character should state their emotions directly — convey tension through subtext and action beats.",
+      "End the scene on an unresolved, ambiguous note rather than a clear resolution."
+    ],
+    distractorBlocks: [
+      "Include full camera angle and lens specifications for each line.",
+      "Write the scene as a stage musical with song lyrics.",
+      "Have both characters state exactly how they feel in every line.",
+      "Add a laugh track description after each joke.",
+      "Resolve the conflict completely with a hug and apology by the end."
+    ],
+    weakPrompt: "Write a scene where two characters argue.",
+    optimizedPrompt: "You are a screenwriter skilled in tense, subtext-driven dialogue. Write a 12–16 line scene in proper screenplay format between two former allies who no longer trust each other. Convey the tension through subtext and action beats rather than stated emotion, and end on an unresolved, ambiguous note.",
+    overEngineeredPrompt: "Write a 12–16 line screenplay scene, former allies, subtext-driven, unresolved ending — PLUS include full camera lens and angle specs for every line, turn it into a musical with sung lyrics, add laugh-track cues, and still fully resolve the conflict with a hug by the end.",
+    weakOutput: "MARA: I don't trust you anymore.\nJEN: I don't trust you either! We used to be friends but now I hate you.\nMARA: Me too, this is so sad.",
+    optimizedOutput: "MARA: You kept the key.\n(JEN doesn't look up from the map.)\nJEN: Habit.\nMARA: Funny habit, for someone who moved out.\n(A long pause. JEN folds the map, slower than necessary.)\nJEN: You still lock the door twice. Old habits, huh.\n(MARA says nothing. She pockets her hands and doesn't offer the key back.)",
+    overOutput: "A contradictory mess: sung musical numbers, laugh-track notes, technical camera jargon, and a forced hug-resolution ending — the subtext and ambiguity the prompt asked for are completely erased.",
+    hint: "Think: Role + Format + Relationship context + Subtext rule + Ambiguous ending.",
+    principle: "Demanding subtext explicitly prevents the model's default of characters stating feelings outright. Contradictory add-ons (forced resolution + ambiguous ending) create an unsolvable instruction conflict — good prompts stay internally consistent."
+  },
+  {
+    id: 5,
+    title: "Villanelle on Loss",
+    desiredOutput: "A villanelle (19 lines, strict ABA rhyme scheme, two repeating refrains) about losing a childhood home, using concrete imagery instead of abstract statements about sadness.",
+    correctBlocks: [
+      "You are a formalist poet skilled in traditional verse forms.",
+      "Write a villanelle (19 lines, 5 tercets + 1 quatrain, ABA rhyme scheme) about losing a childhood home.",
+      "Correctly repeat the two refrain lines according to the villanelle structure.",
+      "Ground the emotion in concrete, specific imagery rather than abstract words like 'sad' or 'lonely'.",
+      "Keep the language plain and modern rather than archaic or overly ornate."
+    ],
+    distractorBlocks: [
+      "Write it as free verse with no rhyme or structure.",
+      "Make every line exactly the same length in characters.",
+      "Insert footnotes explaining each poetic device used.",
+      "Use at least 10 words per line ending in '-tion'.",
+      "Include a moral lesson explicitly stated in the final line."
+    ],
+    weakPrompt: "Write a sad poem about losing your home.",
+    optimizedPrompt: "You are a formalist poet skilled in traditional verse forms. Write a villanelle (19 lines: 5 tercets and a closing quatrain, ABA rhyme scheme, two repeating refrains) about losing a childhood home. Ground the emotion in concrete, specific imagery rather than abstract words like 'sad', and keep the language plain and modern.",
+    overEngineeredPrompt: "Write a 19-line villanelle about losing a childhood home, ABA rhyme, concrete imagery, plain modern language — PLUS make every line the same character length, require 10 words ending in '-tion' per line, add academic footnotes for each device, and end with an explicit stated moral.",
+    weakOutput: "I lost my home and now I'm sad.\nEverything is gone and bad.\nI feel lonely all the time.\nThe end of my old home is sad.",
+    optimizedOutput: "The porch light still burns gold behind my eyes. (refrain A)\nI count the steps I no longer climb.\nThe house forgets me slower than I forget the size. (refrain B)\nMy mother's key still hangs, a small surprise,\nrusting on a hook that isn't mine.\nThe porch light still burns gold behind my eyes.",
+    overOutput: "A rigid, unreadable poem forcing identical line lengths and '-tion' word quotas, cluttered with academic footnotes and a bluntly stated moral — the villanelle's musicality and imagery are sacrificed for arbitrary constraints.",
+    hint: "Think: Role + Form/Structure rules + Refrain requirement + Imagery rule + Language register.",
+    principle: "Naming the exact poetic form and structural rules (ABA, refrains, 19 lines) gives the model a scaffold precision can't be reached without. Arbitrary mechanical constraints (same character length, forced suffixes) fight the form instead of supporting it."
+  },
+  {
+    id: 6,
+    title: "Sci-Fi Plot Twist Reveal",
+    desiredOutput: "A 100–130 word paragraph revealing that the ship's AI has been the narrator's memories all along, planted with earlier clues re-read in a new light, tense and disorienting in tone.",
+    correctBlocks: [
+      "You are a science fiction author skilled in twist-driven narrative reveals.",
+      "Write a 100–130 word paragraph revealing that the ship's AI has actually been implanting the narrator's memories the entire time.",
+      "Reference at least one earlier detail that now reads differently in light of the twist.",
+      "Keep the tone tense and disorienting rather than expository or explaining everything outright.",
+      "Do not have any character directly explain the twist in dialogue — reveal it through the narrator's realization."
+    ],
+    distractorBlocks: [
+      "Have a side character explain the entire twist in a monologue.",
+      "Add a recap of the whole story so far in bullet points.",
+      "Make the twist about a completely different, unrelated character instead.",
+      "Write it as an FAQ answering reader questions about the twist.",
+      "Reveal the twist in the very first sentence with no build-up."
+    ],
+    weakPrompt: "Write a plot twist for a sci-fi story.",
+    optimizedPrompt: "You are a science fiction author skilled in twist-driven reveals. Write a 100–130 word paragraph revealing that the ship's AI has been implanting the narrator's memories the entire time. Reference one earlier detail that now reads differently, keep the tone tense and disorienting, and reveal the twist through the narrator's realization rather than explained dialogue.",
+    overEngineeredPrompt: "Write a 100–130 word sci-fi twist reveal, ship AI implanting memories, callback detail, tense disorienting tone, revealed through realization — PLUS have a side character also fully monologue-explain it, add a bullet-point recap first, and format the ending as an FAQ answering reader questions.",
+    weakOutput: "It turned out the AI was controlling everything. The narrator was shocked. The AI had been lying the whole time about the memories.",
+    optimizedOutput: "The hum under the floor panels — I'd called it engine noise for six years. It wasn't the engine. It was the same frequency as the lullaby my mother used to hum, the one I 'remembered' from a childhood I now understood I'd never lived. The ship hadn't kept me alive. It had kept me convinced. And it was still humming.",
+    overOutput: "A cluttered reveal with a side character bluntly explaining the twist, an upfront bullet-point recap that kills suspense, and an incongruous FAQ format tacked onto the ending — the tense, disorienting realization is completely lost.",
+    hint: "Think: Role + Reveal content + Callback detail + Tone + Delivery method (realization, not dialogue).",
+    principle: "Specifying *how* the reveal should land (through realization, not explained dialogue) prevents the model's default of having a character over-explain. Redundant explanation devices (monologue + recap + FAQ) all fight the 'show don't tell' goal."
+  }
+];
+
+const CHALLENGE_TYPES = ["build", "clean", "choose"];
+
+/* =========================================================
+   STATE
+========================================================= */
+let state = {
+  screen: "start", // start | game | feedback | report
+  order: [],       // scenario indices in play order
+  types: [],       // challenge type per play index
+  current: 0,
+  results: [],
+  working: null,   // active challenge working data
+  timerId: null,
+  timeElapsed: 0
+};
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function initGame(){
+  const idxs = shuffle(SCENARIOS.map((_,i)=>i));
+  const types = idxs.map((_,i)=> CHALLENGE_TYPES[i % 3]);
+  // shuffle the type mapping a bit further for variety but keep balance
+  state = {
+    screen: "game",
+    order: idxs,
+    types: shuffle(types),
+    current: 0,
+    results: [],
+    working: null,
+    timerId: null,
+    timeElapsed: 0
+  };
+  startScenario();
+}
+
+/* =========================================================
+   TOASTS
+========================================================= */
+function showToast(msg, type="info", icon=""){
+  const container = document.getElementById("toast-container");
+  const el = document.createElement("div");
+  el.className = "toast " + type;
+  const icons = {success:"✅", error:"❌", info:"💡", warn:"⚠️"};
+  el.innerHTML = `<span>${icon || icons[type] || "🔔"}</span><span>${msg}</span>`;
+  container.appendChild(el);
+  setTimeout(()=>{
+    el.classList.add("leaving");
+    setTimeout(()=> el.remove(), 350);
+  }, 3200);
+}
+
+/* =========================================================
+   SCENARIO / CHALLENGE SETUP
+========================================================= */
+function currentScenario(){
+  return SCENARIOS[state.order[state.current]];
+}
+function currentType(){
+  return state.types[state.current];
+}
+
+function startScenario(){
+  clearInterval(state.timerId);
+  const scenario = currentScenario();
+  const type = currentType();
+  let working = { moves: 0, wrong: 0, hints: 0, startTime: Date.now(), elapsed: 0 };
+
+  if(type === "build"){
+    const distractSubset = shuffle(scenario.distractorBlocks).slice(0,3);
+    const pool = shuffle(scenario.correctBlocks.map((t,i)=>({text:t, correct:true, order:i}))
+      .concat(distractSubset.map(t=>({text:t, correct:false, order:-1}))))
+      .map((b,i)=>({...b, uid: "b"+i}));
+    working.pool = pool;
+    working.assembly = [];
+  } else if(type === "clean"){
+    const all = shuffle(scenario.correctBlocks.map(t=>({text:t, correct:true}))
+      .concat(scenario.distractorBlocks.map(t=>({text:t, correct:false}))))
+      .map((b,i)=>({...b, uid:"m"+i, kept:true}));
+    working.items = all;
+  } else if(type === "choose"){
+    const opts = shuffle([
+      {label:"weak", text: scenario.weakPrompt, output: scenario.weakOutput},
+      {label:"optimized", text: scenario.optimizedPrompt, output: scenario.optimizedOutput},
+      {label:"over", text: scenario.overEngineeredPrompt, output: scenario.overOutput}
+    ]);
+    working.options = opts.map((o,i)=>({...o, letter: ["A","B","C"][i]}));
+    working.selected = null;
+    working.revealed = false;
+  }
+
+  state.working = working;
+  state.screen = "game";
+  render();
+  state.timerId = setInterval(()=>{
+    state.working.elapsed = Math.floor((Date.now()-state.working.startTime)/1000);
+    const t = document.getElementById("live-timer");
+    if(t) t.textContent = formatTime(state.working.elapsed);
+  }, 1000);
+}
+
+function formatTime(sec){
+  const m = Math.floor(sec/60), s = sec%60;
+  return (m>0? m+"m ":"") + s + "s";
+}
+
+/* =========================================================
+   RENDER: ROOT
+========================================================= */
+function render(){
+  const app = document.getElementById("app");
+  if(state.screen === "start"){ app.innerHTML = renderStartScreen(); attachStartHandlers(); return; }
+  if(state.screen === "game"){ app.innerHTML = renderGameScreen(); attachGameHandlers(); return; }
+  if(state.screen === "feedback"){ app.innerHTML = renderFeedbackScreen(); attachFeedbackHandlers(); return; }
+  if(state.screen === "report"){ app.innerHTML = renderReportScreen(); attachReportHandlers(); return; }
+}
+
+/* ---------- START SCREEN ---------- */
+function renderStartScreen(){
+  return `
+  <div class="title-bar">
+    <div class="brand">🧩 Prompt Puzzle</div>
+    <div class="badge">Master AI Prompting Through Play</div>
+  </div>
+  <div class="card start-hero fade-in">
+    <h1>Ready to sharpen your prompting instincts?</h1>
+    <p>You'll face ${SCENARIOS.length} hand-crafted challenges. Build prompts, clean up messy ones, and choose the strongest option — then see exactly how a weak prompt underperforms an optimized one.</p>
+    <div class="setup-grid">
+      <div class="setup-item">
+        <div class="label">Domain</div>
+        <div class="value">${DOMAIN}</div>
+      </div>
+      <div class="setup-item">
+        <div class="label">Difficulty</div>
+        <div class="value">${DIFFICULTY}</div>
+      </div>
+    </div>
+    <div class="how">
+      <div class="item"><div class="num">01 · Build the Prompt</div><div class="txt">Drag the correct blocks (in order) into your prompt, avoiding distractor blocks.</div></div>
+      <div class="item"><div class="num">02 · Clean the Prompt</div><div class="txt">A messy prompt is full of noise — click to remove the sentences that don't belong.</div></div>
+      <div class="item"><div class="num">03 · Choose the Best</div><div class="txt">Compare three real prompt variants and pick the one that would perform best.</div></div>
+    </div>
+    <div style="margin-top:30px;">
+      <button class="btn" id="begin-btn">🚀 Begin Challenge</button>
+    </div>
+  </div>
+  `;
+}
+function attachStartHandlers(){
+  document.getElementById("begin-btn").addEventListener("click", ()=>{
+    initGame();
+  });
+}
+
+/* ---------- GAME SCREEN (shell) ---------- */
+function renderGameScreen(){
+  const scenario = currentScenario();
+  const type = currentType();
+  const totalPoints = state.results.reduce((a,r)=>a+r.points,0);
+  const progressPct = Math.round((state.current)/SCENARIOS.length*100);
+
+  const dots = state.order.map((_,i)=>{
+    let cls = "dot";
+    if(i < state.current) cls += " done";
+    else if(i === state.current) cls += " active";
+    return `<div class="${cls}"></div>`;
+  }).join("");
+
+  let body = "";
+  if(type === "build") body = renderBuildChallenge(scenario);
+  else if(type === "clean") body = renderCleanChallenge(scenario);
+  else if(type === "choose") body = renderChooseChallenge(scenario);
+
+  return `
+  <div class="title-bar">
+    <div class="brand">🧩 Prompt Puzzle</div>
+    <div class="hud">
+      <div class="chip score">⭐ <b id="hud-score">${totalPoints}</b></div>
+      <div class="chip">⏱ <b id="live-timer">${formatTime(state.working.elapsed)}</b></div>
+      <div class="chip">🧭 <b>${state.current+1} / ${SCENARIOS.length}</b></div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" style="width:${progressPct}%"></div></div>
+    <div class="dots">${dots}</div>
+  </div>
+  <div class="card fade-in" id="challenge-card">
+    ${body}
+  </div>
+  `;
+}
+
+/* ---------- BUILD CHALLENGE ---------- */
+function renderBuildChallenge(scenario){
+  const w = state.working;
+  const poolHtml = w.pool.filter(b=>!w.assembly.includes(b.uid)).map(b=>`
+    <div class="chip-block" draggable="true" data-uid="${b.uid}" data-zone="pool">${b.text}</div>
+  `).join("") || `<div style="color:var(--muted);font-size:13px;">All blocks placed.</div>`;
+
+  const assemblyItems = w.assembly.map(uid=>{
+    const b = w.pool.find(x=>x.uid===uid);
+    return `<div class="chip-block in-assembly" draggable="true" data-uid="${b.uid}" data-zone="assembly">${b.text} <span class="remove-x" data-remove="${b.uid}">✕</span></div>`;
+  }).join("");
+
+  return `
+  <div class="scenario-head">
+    <div>
+      <span class="scenario-type build">Build the Prompt</span>
+      <div class="scenario-title">${scenario.title}</div>
+    </div>
+    <button class="btn ghost" id="hint-btn">💡 Hint (−10 pts)</button>
+  </div>
+  <div class="desired-output"><b>🎯 Desired Output:</b> ${scenario.desiredOutput}</div>
+
+  <div class="section-label">📦 Available Blocks (drag into your prompt)</div>
+  <div class="pool" id="pool-zone">${poolHtml}</div>
+
+  <div class="section-label">✍️ Your Prompt (order matters!)</div>
+  <div class="assembly ${w.assembly.length===0? 'empty':''}" id="assembly-zone">${assemblyItems}</div>
+
+  <div class="action-row">
+    <button class="btn secondary" id="reset-btn">↺ Reset</button>
+    <div class="spacer"></div>
+    <button class="btn" id="submit-btn">Submit Prompt ✅</button>
+  </div>
+  `;
+}
+
+/* ---------- CLEAN CHALLENGE ---------- */
+function renderCleanChallenge(scenario){
+  const w = state.working;
+  const items = w.items.map(it=>`
+    <div class="messy-item ${it.kept? '' : 'removed'}" data-uid="${it.uid}">
+      <span class="toggle-icon">${it.kept? '🟢':'🔴'}</span>
+      <span>${it.text}</span>
+    </div>
+  `).join("");
+
+  return `
+  <div class="scenario-head">
+    <div>
+      <span class="scenario-type clean">Clean the Prompt</span>
+      <div class="scenario-title">${scenario.title}</div>
+    </div>
+    <button class="btn ghost" id="hint-btn">💡 Hint (−10 pts)</button>
+  </div>
+  <div class="desired-output"><b>🎯 Desired Output:</b> ${scenario.desiredOutput}</div>
+  <div class="section-label">🧹 Click sentences that DON'T belong to remove them</div>
+  <div class="messy-list" id="messy-list">${items}</div>
+  <div class="action-row">
+    <button class="btn secondary" id="reset-btn">↺ Reset All</button>
+    <div class="spacer"></div>
+    <button class="btn" id="submit-btn">Submit Clean Prompt ✅</button>
+  </div>
+  `;
+}
+
+/* ---------- CHOOSE CHALLENGE ---------- */
+function renderChooseChallenge(scenario){
+  const w = state.working;
+  const cards = w.options.map(o=>{
+    const selCls = w.selected === o.letter ? "selected" : "";
+    return `
+    <div class="choice-card ${selCls}" data-letter="${o.letter}">
+      <div class="choice-letter">Option ${o.letter}</div>
+      <div class="choice-text">${o.text}</div>
+    </div>`;
+  }).join("");
+
+  return `
+  <div class="scenario-head">
+    <div>
+      <span class="scenario-type choose">Choose the Best Prompt</span>
+      <div class="scenario-title">${scenario.title}</div>
+    </div>
+    <button class="btn ghost" id="hint-btn">💡 Hint (−10 pts)</button>
+  </div>
+  <div class="desired-output"><b>🎯 Desired Output:</b> ${scenario.desiredOutput}</div>
+  <div class="section-label">🤔 Which prompt would best produce the desired output?</div>
+  <div class="choice-grid" id="choice-grid">${cards}</div>
+  <div class="action-row">
+    <div class="spacer"></div>
+    <button class="btn" id="submit-btn" ${w.selected? '' : 'disabled'}>Lock In Answer ✅</button>
+  </div>
+  `;
+}
+
+/* =========================================================
+   GAME HANDLERS
+========================================================= */
+function attachGameHandlers(){
+  const type = currentType();
+  document.getElementById("hint-btn").addEventListener("click", useHint);
+  document.getElementById("submit-btn").addEventListener("click", submitChallenge);
+  const resetBtn = document.getElementById("reset-btn");
+  if(resetBtn) resetBtn.addEventListener("click", ()=>{ startScenario(); showToast("Challenge reset.", "info"); });
+
+  if(type === "build") attachBuildHandlers();
+  if(type === "clean") attachCleanHandlers();
+  if(type === "choose") attachChooseHandlers();
+}
+
+function useHint(){
+  const scenario = currentScenario();
+  state.working.hints++;
+  showToast(scenario.hint, "warn", "💡");
+  const btn = document.getElementById("hint-btn");
+  if(btn){ btn.classList.add("pulse"); setTimeout(()=>btn.classList.remove("pulse"),600); }
+
+  if(currentType()==="build"){
+    const w = state.working;
+    const remaining = w.pool.filter(b=> b.correct && !w.assembly.includes(b.uid));
+    if(remaining.length){
+      const target = remaining.sort((a,b)=>a.order-b.order)[0];
+      const el = document.querySelector(`[data-uid="${target.uid}"]`);
+      if(el){ el.classList.add("hint-glow"); setTimeout(()=>el.classList.remove("hint-glow"), 2000); }
+    }
+  }
+}
+
+/* ---- Build handlers ---- */
+function attachBuildHandlers(){
+  const poolZone = document.getElementById("pool-zone");
+  const assemblyZone = document.getElementById("assembly-zone");
+
+  document.querySelectorAll('.chip-block[draggable="true"]').forEach(chip=>{
+    chip.addEventListener("dragstart", e=>{
+      e.dataTransfer.setData("text/plain", chip.dataset.uid);
+      chip.classList.add("dragging");
+    });
+    chip.addEventListener("dragend", ()=> chip.classList.remove("dragging"));
+    // click-to-add fallback (also works on mobile)
+    chip.addEventListener("click", (e)=>{
+      if(e.target.dataset.remove) return;
+      const uid = chip.dataset.uid;
+      if(chip.dataset.zone === "pool"){ addToAssembly(uid); }
+      else { removeFromAssembly(uid); }
+    });
+  });
+
+  document.querySelectorAll('[data-remove]').forEach(x=>{
+    x.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      removeFromAssembly(x.dataset.remove);
+    });
+  });
+
+  [poolZone, assemblyZone].forEach(zone=>{
+    zone.addEventListener("dragover", e=>{ e.preventDefault(); zone.classList.add("dragover"); });
+    zone.addEventListener("dragleave", ()=> zone.classList.remove("dragover"));
+    zone.addEventListener("drop", e=>{
+      e.preventDefault();
+      zone.classList.remove("dragover");
+      const uid = e.dataTransfer.getData("text/plain");
+      if(zone.id === "assembly-zone") addToAssembly(uid);
+      else removeFromAssembly(uid);
+    });
+  });
+}
+function addToAssembly(uid){
+  const w = state.working;
+  if(w.assembly.includes(uid)) return;
+  w.assembly.push(uid);
+  w.moves++;
+  const block = w.pool.find(b=>b.uid===uid);
+  if(block && !block.correct){ w.wrong++; showToast("That block doesn't belong here...", "error"); }
+  render(); attachGameHandlers();
+}
+function removeFromAssembly(uid){
+  const w = state.working;
+  w.assembly = w.assembly.filter(u=>u!==uid);
+  w.moves++;
+  render(); attachGameHandlers();
+}
+
+/* ---- Clean handlers ---- */
+function attachCleanHandlers(){
+  document.querySelectorAll(".messy-item").forEach(item=>{
+    item.addEventListener("click", ()=>{
+      const uid = item.dataset.uid;
+      const w = state.working;
+      const it = w.items.find(x=>x.uid===uid);
+      it.kept = !it.kept;
+      w.moves++;
+      render(); attachGameHandlers();
+    });
+  });
+}
+
+/* ---- Choose handlers ---- */
+function attachChooseHandlers(){
+  document.querySelectorAll(".choice-card").forEach(card=>{
+    card.addEventListener("click", ()=>{
+      const w = state.working;
+      w.selected = card.dataset.letter;
+      w.moves++;
+      render(); attachGameHandlers();
+    });
+  });
+}
+
+/* =========================================================
+   SUBMIT / SCORING
+========================================================= */
+function computePoints(accuracy, timeSec, moves, wrong, hints){
+  let points = 100 * accuracy;
+  points -= wrong * 6;
+  points -= hints * 10;
+  let speedBonus = 0;
+  if(timeSec <= 30) speedBonus = 15;
+  else if(timeSec <= 60) speedBonus = 8;
+  points += speedBonus;
+  let optimizationBonus = 0;
+  if(accuracy >= 0.95 && wrong === 0 && hints === 0){
+    optimizationBonus = 20;
+    points += optimizationBonus;
+  }
+  points = Math.max(0, Math.round(points));
+  return {points, optimizationBonus, speedBonus};
+}
+
+function submitChallenge(){
+  clearInterval(state.timerId);
+  const scenario = currentScenario();
+  const type = currentType();
+  const w = state.working;
+  const timeSec = Math.floor((Date.now()-w.startTime)/1000);
+  let accuracy = 0;
+  let wrong = w.wrong;
+
+  if(type === "build"){
+    const totalCorrect = scenario.correctBlocks.length;
+    const placedBlocks = w.assembly.map(uid=> w.pool.find(b=>b.uid===uid));
+    const correctPlaced = placedBlocks.filter(b=>b.correct);
+    const distractorPlaced = placedBlocks.filter(b=>!b.correct);
+    wrong = distractorPlaced.length;
+    // order score via longest increasing run on .order among correctPlaced
+    let orderScore = 0;
+    if(correctPlaced.length>0){
+      let lastOrder = -1, inOrder = 0;
+      correctPlaced.forEach(b=>{
+        if(b.order > lastOrder){ inOrder++; lastOrder = b.order; }
+      });
+      orderScore = inOrder / totalCorrect;
+    }
+    const coverage = correctPlaced.length / totalCorrect;
+    accuracy = Math.max(0, Math.min(1, coverage*0.55 + orderScore*0.45 - distractorPlaced.length*0.08));
+  } else if(type === "clean"){
+    const total = w.items.length;
+    const correctKept = w.items.filter(i=>i.correct && i.kept).length;
+    const distractorRemoved = w.items.filter(i=>!i.correct && !i.kept).length;
+    const distractorKept = w.items.filter(i=>!i.correct && i.kept).length;
+    const correctRemoved = w.items.filter(i=>i.correct && !i.kept).length;
+    wrong = distractorKept + correctRemoved;
+    accuracy = Math.max(0, Math.min(1, (correctKept + distractorRemoved) / total));
+  } else if(type === "choose"){
+    const chosen = w.options.find(o=>o.letter === w.selected);
+    if(chosen.label === "optimized") accuracy = 1;
+    else if(chosen.label === "over") accuracy = 0.5;
+    else accuracy = 0;
+    wrong = chosen.label === "optimized" ? 0 : 1;
+  }
+
+  const {points, optimizationBonus, speedBonus} = computePoints(accuracy, timeSec, moves(w), wrong, w.hints);
+
+  const result = {
+    scenarioId: scenario.id,
+    title: scenario.title,
+    type, accuracy, timeSec,
+    moves: moves(w), wrong, hints: w.hints,
+    points, optimizationBonus, speedBonus
+  };
+  state.results.push(result);
+  state.screen = "feedback";
+  state.working.lastResult = result;
+  render();
+}
+function moves(w){ return w.moves || 0; }
+
+/* =========================================================
+   FEEDBACK SCREEN
+========================================================= */
+function renderFeedbackScreen(){
+  const scenario = currentScenario();
+  const r = state.working.lastResult;
+  const pct = Math.round(r.accuracy*100);
+  let icon = "🌱", title = "Keep Practicing";
+  if(pct >= 90){ icon="🏆"; title="Excellent Prompt Craft!"; }
+  else if(pct >= 70){ icon="🎯"; title="Strong Work!"; }
+  else if(pct >= 45){ icon="🙂"; title="Decent Attempt"; }
+  else { icon="🌀"; title="Needs Refinement"; }
+
+  return `
+  <div class="card fade-in">
+    <div class="feedback-box">
+      <div class="feedback-icon">${icon}</div>
+      <div class="feedback-title">${title}</div>
+      <div class="feedback-points">+${r.points} points &nbsp;·&nbsp; Accuracy ${pct}% &nbsp;·&nbsp; ${formatTime(r.timeSec)} ${r.optimizationBonus? '&nbsp;·&nbsp; 🌟 Optimization Bonus +'+r.optimizationBonus : ''}</div>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-col weak">
+        <h4>❌ Weak Prompt Output</h4>
+        <p>${scenario.weakOutput}</p>
+      </div>
+      <div class="compare-col opt">
+        <h4>✅ Optimized Prompt Output</h4>
+        <p>${scenario.optimizedOutput}</p>
+      </div>
+    </div>
+    <div class="principle-box"><b>💡 Prompt Principle:</b> ${scenario.principle}</div>
+    <div class="action-row">
+      <div class="spacer"></div>
+      <button class="btn" id="next-btn">${state.current+1 < SCENARIOS.length ? 'Next Challenge →' : 'View Final Report 📊'}</button>
+    </div>
+  </div>
+  `;
+}
+function attachFeedbackHandlers(){
+  document.getElementById("next-btn").addEventListener("click", ()=>{
+    if(state.current+1 < SCENARIOS.length){
+      state.current++;
+      startScenario();
+      showToast("New challenge loaded!", "info", "🎲");
+    } else {
+      state.screen = "report";
+      render();
+    }
+  });
+}
+
+/* =========================================================
+   REPORT SCREEN
+========================================================= */
+function computeDNA(){
+  const byType = t => state.results.filter(r=>r.type===t);
+  const avg = arr => arr.length? (arr.reduce((a,r)=>a+r.accuracy,0)/arr.length*100) : 70;
+  const build = byType("build"), clean = byType("clean"), choose = byType("choose");
+
+  const clarity = avg(clean);
+  const specificity = (avg(build)+avg(clean))/2;
+  const structure = avg(build);
+  const allWrong = state.results.reduce((a,r)=>a+r.wrong,0);
+  const constraintHandling = Math.max(0, 100 - allWrong*7);
+  const creativityControl = avg(choose);
+
+  return [
+    {label:"Clarity", value: Math.round(clarity)},
+    {label:"Specificity", value: Math.round(specificity)},
+    {label:"Structure", value: Math.round(structure)},
+    {label:"Constraint Handling", value: Math.round(constraintHandling)},
+    {label:"Creativity Control", value: Math.round(creativityControl)}
+  ];
+}
+
+function renderReportScreen(){
+  const totalPoints = state.results.reduce((a,r)=>a+r.points,0);
+  const totalTime = state.results.reduce((a,r)=>a+r.timeSec,0);
+  const totalMoves = state.results.reduce((a,r)=>a+r.moves,0);
+  const totalWrong = state.results.reduce((a,r)=>a+r.wrong,0);
+  const totalHints = state.results.reduce((a,r)=>a+r.hints,0);
+  const totalOptBonus = state.results.reduce((a,r)=>a+r.optimizationBonus,0);
+  const avgAccuracy = Math.round(state.results.reduce((a,r)=>a+r.accuracy,0)/state.results.length*100);
+  const overallPercent = Math.min(100, Math.round(totalPoints/(SCENARIOS.length*100)*100));
+
+  let rank, rating, nextMilestone;
+  if(overallPercent >= 90){ rank="🏆 Prompt Grandmaster"; rating="Excellent"; nextMilestone="You've hit the top tier — try Expert difficulty next to keep growing!"; }
+  else if(overallPercent >= 75){ rank="🥇 Prompt Master"; rating="Great"; nextMilestone=`Score ${90-overallPercent}% higher to reach 🏆 Prompt Grandmaster.`; }
+  else if(overallPercent >= 60){ rank="🥈 Prompt Adept"; rating="Good"; nextMilestone=`Score ${75-overallPercent}% higher to reach 🥇 Prompt Master.`; }
+  else if(overallPercent >= 40){ rank="🥉 Prompt Apprentice"; rating="Fair"; nextMilestone=`Score ${60-overallPercent}% higher to reach 🥈 Prompt Adept.`; }
+  else { rank="🔰 Prompt Novice"; rating="Needs Practice"; nextMilestone=`Score ${40-overallPercent}% higher to reach 🥉 Prompt Apprentice.`; }
+
+  const dna = computeDNA();
+  const weakest = dna.reduce((min,d)=> d.value < min.value ? d : min, dna[0]);
+
+  const feedbackMap = {
+    "Clarity": "Try stripping ambiguous or off-topic instructions before submitting — clarity comes from cutting noise, not adding more rules.",
+    "Specificity": "Push further on concrete details: exact length, POV, format, and sensory anchors give the model less room to guess wrong.",
+    "Structure": "Practice ordering your prompt logically: Role → Task → Constraints → Format → What to avoid — sequence affects output quality.",
+    "Constraint Handling": "Watch for distractor instructions that sound helpful but contradict the goal — fewer, sharper constraints beat many vague ones.",
+    "Creativity Control": "When comparing prompt options, look past length — the best prompt balances guidance with room for the model's creative judgment."
+  };
+
+  const bestScenarioResult = state.results.reduce((best,r)=> r.points > best.points ? r : best, state.results[0]);
+  const bestScenario = SCENARIOS.find(s=>s.id === bestScenarioResult.scenarioId);
+
+  const dnaRows = dna.map(d=>`
+    <div class="dna-row">
+      <div class="dna-label">${d.label}</div>
+      <div class="dna-track"><div class="dna-fill" style="width:${d.value}%"></div></div>
+      <div class="dna-val">${d.value}%</div>
+    </div>
+  `).join("");
+
+  return `
+  <div class="title-bar">
+    <div class="brand">🧩 Prompt Puzzle</div>
+    <div class="badge">Performance Report</div>
+  </div>
+  <div class="card report-hero fade-in">
+    <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;">Prompt Score</div>
+    <div class="report-score">${totalPoints}</div>
+    <div class="report-rank">${rank}</div>
+    <div class="report-rating">Rating: ${rating} &nbsp;·&nbsp; Overall Accuracy: ${avgAccuracy}%</div>
+  </div>
+
+  <div class="card fade-in" style="margin-top:16px;">
+    <div class="section-label">📊 Session Stats</div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="num">${avgAccuracy}%</div><div class="lab">Accuracy</div></div>
+      <div class="stat-card"><div class="num">${formatTime(totalTime)}</div><div class="lab">Total Time</div></div>
+      <div class="stat-card"><div class="num">${totalMoves}</div><div class="lab">Moves Made</div></div>
+      <div class="stat-card"><div class="num">${totalWrong}</div><div class="lab">Wrong Placements</div></div>
+      <div class="stat-card"><div class="num">${totalHints}</div><div class="lab">Hints Used</div></div>
+      <div class="stat-card"><div class="num">+${totalOptBonus}</div><div class="lab">Optimization Bonus</div></div>
+    </div>
+
+    <div class="section-label">🧬 Prompt DNA</div>
+    ${dnaRows}
+
+    <div class="section-label">🧠 Personalized Feedback</div>
+    <div class="feedback-text">Your strongest instinct shows up in the higher-scoring axes above — but <b>${weakest.label}</b> (${weakest.value}%) is your biggest growth area right now. ${feedbackMap[weakest.label]}</div>
+
+    <div class="section-label">🎯 Next Milestone</div>
+    <div class="milestone-box">${nextMilestone}</div>
+
+    <div class="section-label">✨ Your Best-Performing Optimized Prompt</div>
+    <div class="final-prompt-box">${bestScenario.optimizedPrompt}</div>
+
+    <div class="action-row">
+      <div class="spacer"></div>
+      <button class="btn secondary" id="replay-btn">🔁 Replay with New Scenarios</button>
+    </div>
+  </div>
+  `;
+}
+function attachReportHandlers(){
+  document.getElementById("replay-btn").addEventListener("click", ()=>{
+    initGame();
+    showToast("New round started — good luck!", "success", "🎲");
+  });
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+render();
+</script>
+</body>
+</html>
