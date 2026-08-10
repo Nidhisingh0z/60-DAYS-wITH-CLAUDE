@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Workflow Architect — Portfolio Website Build Plan</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --paper:#EEF1F5;
+  --paper-2:#E3E8EE;
+  --ink:#10243E;
+  --ink-soft:#3C5573;
+  --line:#C4D0DC;
+  --line-strong:#9FB1C3;
+  --amber:#D98A2B;
+  --amber-soft:#F3DDB6;
+  --cyan:#2E8E99;
+  --cyan-soft:#CFE8EA;
+  --card:#FFFFFF;
+  --shadow:0 1px 0 rgba(16,36,62,0.06);
+  --radius:2px;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans',sans-serif;
+  --disp:'Space Grotesk',sans-serif;
+}
+[data-theme="dark"]{
+  --paper:#0E2233;
+  --paper-2:#132A3E;
+  --ink:#E7EEF3;
+  --ink-soft:#A9BFD1;
+  --line:#28455E;
+  --line-strong:#3B5E7A;
+  --amber:#E8A33D;
+  --amber-soft:#3A2E17;
+  --cyan:#6FD0DE;
+  --cyan-soft:#123640;
+  --card:#132A3E;
+  --shadow:0 1px 0 rgba(0,0,0,0.3);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  transition:background .3s ease,color .3s ease;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size:32px 32px;
+  background-attachment:fixed;
+}
+::selection{background:var(--amber-soft);color:var(--ink);}
+a{color:var(--cyan);}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+
+/* ---------- Title block ---------- */
+.titleblock{
+  border-bottom:2px solid var(--ink);
+  background:var(--paper);
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(6px);
+}
+.titleblock-inner{
+  max-width:1180px;margin:0 auto;padding:14px 24px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand-mark{
+  width:34px;height:34px;border:2px solid var(--ink);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+  font-size:11px;font-weight:600;flex-shrink:0;
+}
+.brand-text .k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--ink-soft);text-transform:uppercase;}
+.brand-text .t{font-family:var(--disp);font-size:18px;font-weight:700;}
+.tb-actions{display:flex;gap:8px;align-items:center;}
+.btn{
+  font-family:var(--mono);font-size:12px;letter-spacing:.03em;
+  border:1.5px solid var(--ink);background:transparent;color:var(--ink);
+  padding:8px 14px;border-radius:var(--radius);cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;transition:.15s;
+}
+.btn:hover{background:var(--ink);color:var(--paper);}
+.btn.primary{background:var(--amber);border-color:var(--amber);color:#1A1300;}
+.btn.primary:hover{filter:brightness(1.08);}
+
+/* ---------- Header / meta strip ---------- */
+.meta-strip{border-bottom:1px solid var(--line-strong);}
+.meta-inner{
+  max-width:1180px;margin:0 auto;padding:6px 24px;
+  display:flex;gap:28px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.04em;
+}
+.meta-inner b{color:var(--ink);font-weight:600;}
+
+/* ---------- Hero ---------- */
+.hero{padding:56px 0 24px;}
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--amber);display:flex;align-items:center;gap:10px;margin-bottom:14px;
+}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--amber);}
+h1{
+  font-family:var(--disp);font-weight:700;font-size:clamp(32px,5vw,54px);
+  line-height:1.04;margin:0 0 16px;letter-spacing:-.01em;max-width:16ch;
+}
+.hero p.lead{font-size:16px;color:var(--ink-soft);max-width:60ch;line-height:1.6;margin:0 0 28px;}
+
+/* pipeline diagram */
+.pipeline{margin:36px 0 8px;overflow-x:auto;padding-bottom:8px;}
+.pipeline svg{display:block;min-width:900px;width:100%;height:auto;}
+.pnode{cursor:pointer;}
+.pnode circle{fill:var(--card);stroke:var(--ink);stroke-width:1.6;transition:.15s;}
+.pnode:hover circle{stroke:var(--amber);fill:var(--amber-soft);}
+.pnode text{font-family:var(--mono);}
+.pnode .num{font-size:11px;fill:var(--ink-soft);}
+.pnode .label{font-size:12.5px;fill:var(--ink);font-weight:600;font-family:var(--sans);}
+.pline{stroke:var(--line-strong);stroke-width:1.6;stroke-dasharray:3 4;}
+
+/* progress */
+.progress-wrap{display:flex;align-items:center;gap:14px;margin:26px 0 6px;font-family:var(--mono);font-size:12px;color:var(--ink-soft);}
+.progress-bar{flex:1;height:7px;background:var(--paper-2);border:1px solid var(--line-strong);border-radius:4px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--amber);width:0%;transition:width .4s ease;}
+
+/* ---------- Stage cards ---------- */
+.stages{padding:20px 0 40px;}
+.stage{
+  background:var(--card);border:1px solid var(--line-strong);border-radius:var(--radius);
+  margin-bottom:18px;box-shadow:var(--shadow);overflow:hidden;
+}
+.stage-head{
+  display:flex;align-items:center;gap:16px;padding:18px 22px;cursor:pointer;user-select:none;
+}
+.stage-num{
+  font-family:var(--mono);font-size:12px;color:var(--amber);border:1px solid var(--amber);
+  padding:3px 8px;border-radius:20px;flex-shrink:0;white-space:nowrap;
+}
+.stage-head h3{font-family:var(--disp);font-size:19px;margin:0;flex:1;font-weight:600;}
+.stage-time{font-family:var(--mono);font-size:11px;color:var(--ink-soft);white-space:nowrap;}
+.stage-chevron{width:16px;height:16px;flex-shrink:0;transition:transform .25s ease;color:var(--ink-soft);}
+.stage.open .stage-chevron{transform:rotate(180deg);}
+.stage-body{max-height:0;overflow:hidden;transition:max-height .35s ease;border-top:1px solid transparent;}
+.stage.open .stage-body{border-top:1px solid var(--line);}
+.stage-body-inner{padding:22px;}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:0;}
+.tab-btn{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;background:none;border:none;
+  padding:8px 12px;cursor:pointer;color:var(--ink-soft);border-bottom:2px solid transparent;margin-bottom:-1px;
+}
+.tab-btn.active{color:var(--ink);border-bottom-color:var(--amber);font-weight:600;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;animation:fade .25s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(3px);}to{opacity:1;transform:translateY(0);}}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px;}
+@media(max-width:720px){.grid2{grid-template-columns:1fr;}}
+h4.mini{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);margin:0 0 10px;}
+ul.plain{margin:0;padding-left:18px;line-height:1.65;font-size:14px;}
+ul.tasklist{list-style:none;margin:0;padding:0;}
+ul.tasklist li{display:flex;align-items:flex-start;gap:9px;padding:6px 0;font-size:14px;line-height:1.5;border-bottom:1px dashed var(--line);}
+ul.tasklist li:last-child{border-bottom:none;}
+ul.tasklist input{margin-top:3px;accent-color:var(--amber);cursor:pointer;}
+ul.tasklist label{cursor:pointer;}
+ul.tasklist input:checked + label{color:var(--ink-soft);text-decoration:line-through;}
+
+.tool-table{width:100%;border-collapse:collapse;font-size:13.5px;margin-bottom:6px;}
+.tool-table th{
+  text-align:left;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--ink-soft);border-bottom:1px solid var(--line-strong);padding:6px 10px 8px 0;
+}
+.tool-table td{padding:10px 10px 10px 0;border-bottom:1px solid var(--line);vertical-align:top;}
+.tool-table tr:last-child td{border-bottom:none;}
+.pill{display:inline-block;font-family:var(--mono);font-size:10.5px;background:var(--cyan-soft);color:var(--cyan);padding:2px 8px;border-radius:20px;}
+.pill.best{background:var(--amber-soft);color:#8A5A0E;}
+[data-theme="dark"] .pill.best{color:var(--amber);}
+
+.prompt-card{
+  background:var(--paper-2);border:1px solid var(--line);border-left:3px solid var(--cyan);
+  border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;font-family:var(--mono);font-size:12.5px;line-height:1.6;position:relative;
+}
+.prompt-card .copy{
+  position:absolute;top:8px;right:8px;font-family:var(--sans);font-size:10.5px;background:var(--card);
+  border:1px solid var(--line-strong);padding:3px 8px;border-radius:3px;cursor:pointer;color:var(--ink-soft);
+}
+.prompt-card .copy:hover{color:var(--ink);border-color:var(--ink);}
+
+.callout{border-radius:var(--radius);padding:14px 16px;font-size:13.5px;line-height:1.6;margin-bottom:10px;}
+.callout.good{background:var(--cyan-soft);border-left:3px solid var(--cyan);}
+.callout.bad{background:#F7DEDE;border-left:3px solid #C4534B;}
+[data-theme="dark"] .callout.bad{background:#3A1B19;}
+.callout b{display:block;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+
+.notes-area{width:100%;min-height:90px;background:var(--paper-2);border:1px solid var(--line-strong);border-radius:var(--radius);
+  padding:12px;font-family:var(--mono);font-size:12.5px;color:var(--ink);resize:vertical;}
+.notes-area:focus{outline:1.5px solid var(--amber);}
+.saved-tag{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);margin-top:6px;display:inline-block;opacity:0;transition:opacity .3s;}
+.saved-tag.show{opacity:1;}
+.bookmark-btn{background:none;border:1px solid var(--line-strong);border-radius:20px;font-family:var(--mono);font-size:11px;
+  padding:5px 12px;cursor:pointer;color:var(--ink-soft);margin-left:8px;}
+.bookmark-btn.active{background:var(--amber-soft);border-color:var(--amber);color:#8A5A0E;}
+[data-theme="dark"] .bookmark-btn.active{color:var(--amber);}
+
+/* ---------- Decision tree ---------- */
+.decision{background:var(--card);border:1px solid var(--line-strong);border-radius:var(--radius);padding:26px;margin:30px 0;}
+.decision h3{font-family:var(--disp);margin:0 0 6px;font-size:20px;}
+.decision p{color:var(--ink-soft);font-size:14px;margin:0 0 18px;}
+.dq{font-size:14px;margin-bottom:12px;font-weight:600;}
+.dopts{display:flex;gap:10px;flex-wrap:wrap;}
+.dopt{font-family:var(--mono);font-size:12.5px;border:1.5px solid var(--line-strong);background:var(--paper-2);
+  padding:9px 14px;border-radius:var(--radius);cursor:pointer;color:var(--ink);}
+.dopt:hover{border-color:var(--amber);}
+.dresult{margin-top:16px;padding:14px 16px;background:var(--amber-soft);border-radius:var(--radius);font-size:14px;display:none;}
+.dresult.show{display:block;}
+.dresult a{color:#8A5A0E;font-weight:600;}
+[data-theme="dark"] .dresult a{color:var(--amber);}
+
+/* ---------- Footer sections ---------- */
+.foot-section{padding:36px 0;border-top:1px solid var(--line-strong);}
+.foot-section h2{font-family:var(--disp);font-size:24px;margin:0 0 18px;}
+.stack-table{width:100%;border-collapse:collapse;font-size:13.5px;}
+.stack-table th{text-align:left;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);
+  border-bottom:1px solid var(--line-strong);padding:8px 10px 10px 0;}
+.stack-table td{padding:12px 10px 12px 0;border-bottom:1px solid var(--line);}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{font-family:var(--mono);font-size:12px;background:var(--paper-2);border:1px solid var(--line-strong);padding:6px 12px;border-radius:20px;}
+.res-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+.res-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;}
+.res-card .k{font-family:var(--mono);font-size:10px;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;}
+.res-card h4{margin:6px 0 4px;font-size:15px;font-family:var(--disp);}
+.res-card p{margin:0;font-size:13px;color:var(--ink-soft);line-height:1.5;}
+
+footer{text-align:center;padding:30px 24px 50px;font-family:var(--mono);font-size:11px;color:var(--ink-soft);}
+
+@media print{
+  body{background:#fff;}
+  .titleblock,.tb-actions,.pipeline,.tabs,.decision,footer{display:none !important;}
+  .stage-body{max-height:none !important;}
+  .stage{break-inside:avoid;}
+  .tab-panel{display:block !important;}
+}
+</style>
+</head>
+<body data-theme="light">
+
+<div class="titleblock">
+  <div class="titleblock-inner">
+    <div class="brand">
+      <div class="brand-mark">AWA</div>
+      <div class="brand-text">
+        <div class="k">AI Workflow Architect</div>
+        <div class="t">Portfolio Site Build Plan</div>
+      </div>
+    </div>
+    <div class="tb-actions">
+      <button class="btn" id="printBtn">Print guide</button>
+      <button class="btn" id="themeToggle">Dark mode</button>
+    </div>
+  </div>
+  <div class="meta-strip"><div class="meta-inner">
+    <span><b>Domain</b> · Software Development</span>
+    <span><b>Track</b> · Frontend / Vanilla HTML·CSS·JS</span>
+    <span><b>Objective</b> · Personal Portfolio Website</span>
+    <span><b>Scope</b> · Planning → Deployment</span>
+  </div></div>
+</div>
+
+<div class="wrap hero">
+  <div class="eyebrow">Sheet 00 — Overview</div>
+  <h1>Build your portfolio site with AI doing the heavy lifting.</h1>
+  <p class="lead">A six-stage, start-to-finish plan for shipping a personal portfolio in plain HTML, CSS and JavaScript — with the AI tool, prompt, and best practice attached to every step. Click a node below to jump to a stage, or scroll through the whole build.</p>
+
+  <div class="pipeline">
+    <svg viewBox="0 0 1080 140" xmlns="http://www.w3.org/2000/svg" aria-label="Six stage build pipeline">
+      <line class="pline" x1="60" y1="70" x2="1020" y2="70"></line>
+      <!-- nodes injected via JS-equivalent static markup -->
+      <g class="pnode" data-target="stage-1" transform="translate(60,70)">
+        <circle r="26"></circle><text class="num" text-anchor="middle" y="-34">01</text>
+        <text class="label" text-anchor="middle" y="46">Discovery</text>
+      </g>
+      <g class="pnode" data-target="stage-2" transform="translate(252,70)">
+        <circle r="26"></circle><text class="num" text-anchor="middle" y="-34">02</text>
+        <text class="label" text-anchor="middle" y="46">Content</text>
+      </g>
+      <g class="pnode" data-target="stage-3" transform="translate(444,70)">
+        <circle r="26"></circle><text class="num" text-anchor="middle" y="-34">03</text>
+        <text class="label" text-anchor="middle" y="46">Design</text>
+      </g>
+      <g class="pnode" data-target="stage-4" transform="translate(636,70)">
+        <circle r="26"></circle><text class="num" text-anchor="middle" y="-34">04</text>
+        <text class="label" text-anchor="middle" y="46">Structure &amp; Style</text>
+      </g>
+      <g class="pnode" data-target="stage-5" transform="translate(828,70)">
+        <circle r="26"></circle><text class="num" text-anchor="middle" y="-34">05</text>
+        <text class="label" text-anchor="middle" y="46">Interactivity</text>
+      </g>
+      <g class="pnode" data-target="stage-6" transform="translate(1020,70)">
+        <circle r="26"></circle><text class="num" text-anchor="middle" y="-34">06</text>
+        <text class="label" text-anchor="middle" y="46">Ship</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="progress-wrap">
+    <span id="progressLabel">0 / 0 tasks complete</span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <span id="progressPct">0%</span>
+  </div>
+</div>
+
+<div class="wrap stages" id="stagesWrap"></div>
+
+<div class="wrap">
+  <div class="decision">
+    <h3>Not sure where to start?</h3>
+    <p>Answer one question and we'll point you to the right sheet.</p>
+    <div id="dqBox"></div>
+    <div class="dresult" id="dResult"></div>
+  </div>
+</div>
+
+<div class="foot-section wrap" id="summarySection">
+  <h2>Workflow summary</h2>
+  <p style="font-size:14px;color:var(--ink-soft);line-height:1.7;max-width:78ch;">
+  This plan takes a portfolio site from a blank page to a deployed, tested build in six stages: discovery defines who the site is for and what it must contain; content and copy get drafted before a single div is written; design locks the visual system; two build stages turn that system into semantic HTML/CSS and then layer on JavaScript interactivity; and the final stage covers QA, performance, SEO and deployment. AI tools are woven into every stage — for research and content in the early stages, code generation and debugging in the build stages, and auditing in the final stage — but every AI output is treated as a first draft for a human to review, not a finished deliverable.
+  </p>
+</div>
+
+<div class="foot-section wrap">
+  <h2>Recommended AI stack</h2>
+  <table class="stack-table">
+    <tr><th>Tool</th><th>Role in this workflow</th><th>Stage(s)</th><th>Tier</th></tr>
+    <tr><td>Claude</td><td>Content drafting, code generation for HTML/CSS/JS, accessibility &amp; code review, copy editing</td><td>01–06</td><td>Core</td></tr>
+    <tr><td>ChatGPT (GPT-5)</td><td>Alternative for ideation, copy, and quick code snippets</td><td>01, 02, 05</td><td>Core</td></tr>
+    <tr><td>Midjourney / DALL·E</td><td>Mood board imagery, hero graphics, custom icon concepts</td><td>03</td><td>Optional</td></tr>
+    <tr><td>Google Fonts + Coolors / Khroma</td><td>AI-assisted palette and type pairing</td><td>03</td><td>Optional</td></tr>
+    <tr><td>Google PageSpeed Insights / Lighthouse</td><td>Automated performance, SEO and accessibility audit</td><td>06</td><td>Core</td></tr>
+    <tr><td>GitHub Copilot</td><td>Inline autocomplete while hand-writing HTML/CSS/JS</td><td>04, 05</td><td>Optional</td></tr>
+  </table>
+</div>
+
+<div class="foot-section wrap">
+  <h2>Learning resources</h2>
+  <div class="res-grid">
+    <div class="res-card"><div class="k">Docs</div><h4>MDN Web Docs</h4><p>Reference for HTML, CSS and vanilla JavaScript fundamentals and browser APIs.</p></div>
+    <div class="res-card"><div class="k">Course</div><h4>CSS Grid &amp; Flexbox (freeCodeCamp)</h4><p>Free, project-based layout fundamentals for a responsive portfolio.</p></div>
+    <div class="res-card"><div class="k">Tool</div><h4>web.dev / Learn</h4><p>Google's guides on performance, accessibility and modern CSS.</p></div>
+    <div class="res-card"><div class="k">Inspiration</div><h4>Awwwards / Siteinspire</h4><p>Curated portfolio and personal site design galleries.</p></div>
+  </div>
+</div>
+
+<div class="foot-section wrap">
+  <h2>Communities</h2>
+  <div class="chip-row">
+    <span class="chip">r/webdev</span><span class="chip">r/FrontendDev</span><span class="chip">Frontend Mentor community</span>
+    <span class="chip">Dev.to</span><span class="chip">CSS-Tricks Discord</span><span class="chip">Indie Hackers</span><span class="chip">DesignSystems Slack</span>
+  </div>
+</div>
+
+<div class="foot-section wrap">
+  <h2>Search keywords</h2>
+  <div class="chip-row">
+    <span class="chip">vanilla JS portfolio site</span><span class="chip">HTML CSS JS project structure</span>
+    <span class="chip">portfolio website case study copy</span><span class="chip">AI generated hero section prompt</span>
+    <span class="chip">Lighthouse performance audit checklist</span><span class="chip">personal brand website design</span>
+  </div>
+</div>
+
+<div class="foot-section wrap">
+  <h2>Additional AI prompts</h2>
+  <div class="prompt-card"><button class="copy" onclick="copyPrompt(this)">Copy</button>"Rewrite this project description in 3 tones — confident, playful, technical — each under 40 words, for a portfolio card."</div>
+  <div class="prompt-card"><button class="copy" onclick="copyPrompt(this)">Copy</button>"Generate 10 alt-text descriptions for these project screenshots, written for screen reader clarity, not SEO."</div>
+  <div class="prompt-card"><button class="copy" onclick="copyPrompt(this)">Copy</button>"Review this vanilla JS file for unused variables, event listener leaks, and opportunities to debounce scroll handlers."</div>
+</div>
+
+<div class="foot-section wrap">
+  <h2>Future automation opportunities</h2>
+  <ul class="plain" style="max-width:70ch;">
+    <li>Auto-generate Open Graph preview images per project using an AI image API triggered on deploy.</li>
+    <li>Connect a form-to-CMS pipeline so new project entries auto-populate portfolio cards without manual HTML edits.</li>
+    <li>Use a scheduled Lighthouse CI check that opens a GitHub issue automatically when performance scores regress.</li>
+    <li>AI-summarize GitHub commit history into a "recently shipped" ticker on the homepage.</li>
+  </ul>
+</div>
+
+<footer>AI WORKFLOW ARCHITECT — SHEET SET 01–06 — GENERATED FOR VANILLA HTML/CSS/JS PORTFOLIO BUILD</footer>
+
+<script>
+/* ---------------- Data ---------------- */
+const stages = [
+{
+  id:"stage-1", num:"01", title:"Discovery & Planning", time:"2–4 hrs",
+  objectives:["Define who the portfolio is for (recruiters, clients, collaborators) and its single primary action.","Inventory the content you actually have: projects, case studies, resume, testimonials.","Decide site scope: single page vs multi-page, sections needed."],
+  tasks:["Write a one-sentence purpose statement for the site","List every project/case study to include, ranked by relevance","Decide page structure (single-page scroll vs multi-page)","Note technical constraints (hosting, domain, no-framework requirement)","Sketch a rough sitemap"],
+  outputs:["Purpose statement","Content inventory list","Sitemap / page structure doc"],
+  tools:[
+    {name:"Claude", why:"Strong at structured planning docs and asking clarifying questions that surface gaps in scope.", best:true},
+    {name:"ChatGPT", why:"Good alternative for quick sitemap brainstorming and audience personas.", best:false},
+    {name:"Notion AI", why:"Useful if you're already planning inside Notion and want the inventory in the same workspace.", best:false}
+  ],
+  prompts:[
+    "\"I'm building a portfolio site for [target audience]. Ask me 6 questions to help define scope, then propose a sitemap.\"",
+    "\"Here are my 5 projects: [list]. Rank them by how well they'd impress a [frontend hiring manager] and explain why.\""
+  ],
+  good:"Write the purpose statement before opening a code editor — it becomes the filter for every later decision.",
+  bad:"Starting to design or code before deciding what the site needs to prove to a visitor in 5 seconds.",
+  tips:"Timebox discovery to one sitting. A portfolio site doesn't need a 20-page brief — a clear purpose and a ranked project list is enough to move forward."
+},
+{
+  id:"stage-2", num:"02", title:"Content & Copywriting", time:"3–6 hrs",
+  objectives:["Draft all real copy before layout begins, so design serves the words instead of the words being squeezed into a layout.","Write concise, outcome-focused project descriptions rather than feature lists.","Establish a consistent voice across headline, bio, and project write-ups."],
+  tasks:["Draft homepage headline and sub-headline (3 variants)","Write a short bio (50–75 words) and a longer About section","Write a case-study style description for each top project","Draft calls-to-action for contact/resume links","Proofread and tighten every section to remove filler"],
+  outputs:["Final homepage copy","About section copy","Project descriptions (one per project)","CTA copy"],
+  tools:[
+    {name:"Claude", why:"Produces natural, non-generic copy and is easy to steer toward a specific tone across many short sections.", best:true},
+    {name:"ChatGPT", why:"Fast for generating headline variants to A/B against each other.", best:false},
+    {name:"Hemingway Editor", why:"Not generative, but useful afterward to cut sentence complexity and passive voice.", best:false}
+  ],
+  prompts:[
+    "\"Write 5 homepage headline options for a [frontend developer] portfolio, each under 8 words, avoiding clichés like 'passionate' or 'ninja'.\"",
+    "\"Turn these bullet points about my project into a 60-word case-study style description focused on the problem solved and my role: [bullets]\""
+  ],
+  good:"Ask the AI for multiple short variants, then pick and edit rather than accepting the first full draft wholesale.",
+  bad:"Copy-pasting AI-written bios verbatim — generic phrasing here reads as generic everywhere else on the site.",
+  tips:"Feed the AI real specifics (metrics, tools used, your actual voice from an old email) instead of a vague prompt — specificity is what removes the 'AI-written' feel."
+},
+{
+  id:"stage-3", num:"03", title:"Design & Visual Identity", time:"3–5 hrs",
+  objectives:["Establish a small, deliberate design token system: color, type, spacing.","Produce a low-fidelity wireframe for each page/section before styling.","Keep the system simple enough to hand-code cleanly in CSS."],
+  tasks:["Pick 2 typefaces (display + body) and a 4–5 color palette","Wireframe hero, project grid, and about/contact sections","Decide spacing scale and breakpoints for responsive layout","Collect or generate reference imagery / icon style","Document the system in a short style-guide note"],
+  outputs:["Color & type token list","Low-fidelity wireframes","One-page style guide"],
+  tools:[
+    {name:"Claude", why:"Can propose a cohesive token system (colors, type pairs, spacing scale) as structured CSS variables you can paste directly into your stylesheet.", best:true},
+    {name:"Coolors / Khroma", why:"Dedicated AI palette generators when you want more color exploration than a chat tool gives.", best:false},
+    {name:"Midjourney / DALL·E", why:"For custom hero imagery or abstract graphics if you want visuals beyond photography/icons.", best:false}
+  ],
+  prompts:[
+    "\"Propose a 5-color palette and a display/body font pairing (Google Fonts only) for a minimal developer portfolio with a confident, technical feel. Output as CSS variables.\"",
+    "\"Describe a low-fidelity wireframe, section by section, for a single-page portfolio with hero, project grid, about, and contact.\""
+  ],
+  good:"Lock the token system (colors, type, spacing scale) as CSS variables before writing a single component — it keeps the whole build consistent.",
+  bad:"Skipping wireframes and designing directly in code — this usually produces inconsistent spacing and an unclear visual hierarchy.",
+  tips:"Limit yourself to 2 typefaces and 5 colors max. Constraint at this stage saves hours of second-guessing during the build stages."
+},
+{
+  id:"stage-4", num:"04", title:"Development — Structure & Styling", time:"6–10 hrs",
+  objectives:["Build semantic, accessible HTML for every section.","Implement the design system in plain CSS using variables from Stage 3.","Make the layout responsive across mobile, tablet, and desktop."],
+  tasks:["Set up file structure (index.html, styles.css, script.js, /assets)","Write semantic HTML markup section by section","Implement CSS variables and base typography/spacing","Build responsive layout with Flexbox/Grid","Test at mobile, tablet, and desktop breakpoints"],
+  outputs:["Complete index.html","styles.css implementing the design system","Responsive layout verified at 3 breakpoints"],
+  tools:[
+    {name:"Claude", why:"Reliable at generating clean, semantic HTML/CSS from a described layout and at explaining why a given CSS approach was chosen — useful for learning as you build.", best:true},
+    {name:"GitHub Copilot", why:"Good for inline autocomplete once you're hand-writing markup and want faster repetitive patterns (e.g. repeated project cards).", best:false},
+    {name:"CodePen AI / v0", why:"Useful for quickly prototyping a single component in isolation before dropping it into the full page.", best:false}
+  ],
+  prompts:[
+    "\"Write semantic HTML for a portfolio hero section with a headline, sub-headline, and two CTA buttons. No inline styles, use classes only.\"",
+    "\"Convert this wireframe description into a responsive CSS Grid project gallery, 3 columns on desktop, 1 on mobile, using these CSS variables: [paste tokens]\""
+  ],
+  good:"Ask for markup using semantic tags (header, main, section, article) and check it against a screen reader or accessibility checker before moving on.",
+  bad:"Accepting AI-generated CSS with fixed pixel widths everywhere — this breaks responsiveness and is harder to maintain than a token-based system.",
+  tips:"Build and test one section fully (HTML + CSS + responsive check) before starting the next, rather than writing all markup first and styling everything at the end."
+},
+{
+  id:"stage-5", num:"05", title:"Development — Interactivity", time:"4–8 hrs",
+  objectives:["Add JavaScript for navigation, filtering, and micro-interactions.","Keep interactivity purposeful — every animation should serve usability, not decoration.","Ensure functionality degrades gracefully without JS."],
+  tasks:["Build mobile nav toggle and smooth-scroll links","Add project filter/sort if using a grid of many projects","Implement scroll-triggered reveal animations (optional, restrained)","Add a working contact form (or mailto/Formspree integration)","Test all interactive elements with keyboard-only navigation"],
+  outputs:["script.js with documented functions","Working nav, filters, and form","Keyboard-accessible interactive elements"],
+  tools:[
+    {name:"Claude", why:"Strong at writing vanilla JS without over-engineering it into unnecessary abstractions, and good at explaining event listener behavior and debugging edge cases.", best:true},
+    {name:"ChatGPT", why:"Comparable for straightforward JS snippets like smooth-scroll or a simple filter function.", best:false},
+    {name:"MDN + Claude combo", why:"Use MDN to verify browser API behavior, then have the AI adapt it to your specific markup.", best:false}
+  ],
+  prompts:[
+    "\"Write vanilla JS for a mobile nav that toggles a hamburger menu, closes on outside click, and traps focus while open.\"",
+    "\"Debug why this scroll-reveal function fires twice on fast scroll — here's the code: [paste]. Explain the cause, not just the fix.\""
+  ],
+  good:"Test every interactive element with keyboard-only navigation (Tab, Enter, Escape) — this catches accessibility gaps AI-generated JS commonly misses.",
+  bad:"Adding animation to everything on scroll — excessive motion undermines a technical portfolio's credibility and can trigger motion sensitivity.",
+  tips:"Ask the AI to explain each function it writes in one sentence — if you can't explain your own site's JS in an interview, it's a red flag."
+},
+{
+  id:"stage-6", num:"06", title:"Testing, Optimization & Deployment", time:"3–5 hrs",
+  objectives:["Verify performance, accessibility, and SEO before launch.","Fix cross-browser and cross-device issues.","Deploy to a live URL with a custom domain if desired."],
+  tasks:["Run Lighthouse audit (performance, accessibility, SEO, best practices)","Compress and lazy-load images","Add meta tags, Open Graph tags, and favicon","Test in Chrome, Firefox, Safari, and on a real mobile device","Deploy to GitHub Pages / Netlify / Vercel and connect domain"],
+  outputs:["Lighthouse report with scores 90+","Deployed live site URL","Meta/OG tags and favicon in place"],
+  tools:[
+    {name:"Google Lighthouse / PageSpeed Insights", why:"The standard automated audit for performance, accessibility and SEO — non-negotiable before launch.", best:true},
+    {name:"Claude", why:"Good at reading a Lighthouse report and translating flagged issues into specific code fixes.", best:false},
+    {name:"axe DevTools", why:"Deeper accessibility-specific audit beyond what Lighthouse covers.", best:false}
+  ],
+  prompts:[
+    "\"Here's my Lighthouse report: [paste key issues]. For each one, tell me the specific line of code likely causing it and how to fix it in vanilla HTML/CSS/JS.\"",
+    "\"Write the meta tags, Open Graph tags, and JSON-LD structured data for a personal portfolio homepage titled '[name] — Frontend Developer'.\""
+  ],
+  good:"Test on a real mobile device, not just browser dev tools — touch targets and font rendering often differ from the simulator.",
+  bad:"Launching without compressing images — unoptimized hero images are the most common cause of a slow portfolio site.",
+  tips:"Re-run Lighthouse after every major fix, not just once at the end — regressions are easy to introduce while patching other issues."
+}
+];
+
+/* ---------------- Render stages ---------------- */
+const stagesWrap = document.getElementById('stagesWrap');
+let totalTasks = 0;
+
+stages.forEach((s, idx) => {
+  totalTasks += s.tasks.length;
+  const el = document.createElement('div');
+  el.className = 'stage';
+  el.id = s.id;
+
+  const toolRows = s.tools.map(t => `
+    <tr>
+      <td><strong>${t.name}</strong>${t.best ? ' <span class="pill best">Best fit</span>' : ' <span class="pill">Alternative</span>'}</td>
+      <td>${t.why}</td>
+    </tr>`).join('');
+
+  const promptCards = s.prompts.map(p => `
+    <div class="prompt-card"><button class="copy" onclick="copyPrompt(this)">Copy</button>${p}</div>`).join('');
+
+  const taskItems = s.tasks.map((t, i) => `
+    <li>
+      <input type="checkbox" id="${s.id}-task-${i}" data-stage="${s.id}">
+      <label for="${s.id}-task-${i}">${t}</label>
+    </li>`).join('');
+
+  el.innerHTML = `
+    <div class="stage-head" data-toggle="${s.id}">
+      <span class="stage-num">SHEET ${s.num}/06</span>
+      <h3>${s.title}</h3>
+      <span class="stage-time">${s.time}</span>
+      <svg class="stage-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <button class="bookmark-btn" data-bookmark="${s.id}" onclick="event.stopPropagation(); toggleBookmark('${s.id}')">☆ Bookmark</button>
+    </div>
+    <div class="stage-body" id="${s.id}-body">
+      <div class="stage-body-inner">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="overview">Overview</button>
+          <button class="tab-btn" data-tab="tools">AI Tools</button>
+          <button class="tab-btn" data-tab="prompts">Prompts</button>
+          <button class="tab-btn" data-tab="practice">Best Practice</button>
+          <button class="tab-btn" data-tab="notes">Notes</button>
+        </div>
+
+        <div class="tab-panel active" data-panel="overview">
+          <div class="grid2">
+            <div>
+              <h4 class="mini">Objectives</h4>
+              <ul class="plain">${s.objectives.map(o => `<li>${o}</li>`).join('')}</ul>
+              <h4 class="mini" style="margin-top:18px;">Expected outputs</h4>
+              <ul class="plain">${s.outputs.map(o => `<li>${o}</li>`).join('')}</ul>
+            </div>
+            <div>
+              <h4 class="mini">Tasks</h4>
+              <ul class="tasklist">${taskItems}</ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="tools">
+          <table class="tool-table">
+            <tr><th style="width:34%">Tool</th><th>Why recommended</th></tr>
+            ${toolRows}
+          </table>
+        </div>
+
+        <div class="tab-panel" data-panel="prompts">
+          <h4 class="mini">Prompt examples</h4>
+          ${promptCards}
+        </div>
+
+        <div class="tab-panel" data-panel="practice">
+          <div class="callout good"><b>Best practice</b>${s.good}</div>
+          <div class="callout bad"><b>Common mistake</b>${s.bad}</div>
+          <div class="callout" style="background:var(--paper-2);border-left:3px solid var(--amber);"><b>Efficiency tip</b>${s.tips}</div>
+        </div>
+
+        <div class="tab-panel" data-panel="notes">
+          <h4 class="mini">Your notes for this stage</h4>
+          <textarea class="notes-area" id="${s.id}-notes" placeholder="Jot down decisions, links, or reminders for this stage..."></textarea>
+          <div class="saved-tag" id="${s.id}-saved">Saved</div>
+        </div>
+      </div>
+    </div>
+  `;
+  stagesWrap.appendChild(el);
+});
+
+/* ---------------- Accordion open/close ---------------- */
+document.querySelectorAll('.stage-head').forEach(head => {
+  head.addEventListener('click', () => {
+    const stage = head.closest('.stage');
+    const body = stage.querySelector('.stage-body');
+    const isOpen = stage.classList.contains('open');
+    if (isOpen) {
+      body.style.maxHeight = null;
+      stage.classList.remove('open');
+    } else {
+      stage.classList.add('open');
+      body.style.maxHeight = body.scrollHeight + 200 + 'px';
+    }
+  });
+});
+
+/* open first stage by default */
+document.getElementById('stage-1').querySelector('.stage-head').click();
+
+/* ---------------- Tabs ---------------- */
+stagesWrap.addEventListener('click', (e) => {
+  if (e.target.classList.contains('tab-btn')) {
+    const stageEl = e.target.closest('.stage');
+    stageEl.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    stageEl.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    e.target.classList.add('active');
+    stageEl.querySelector(`.tab-panel[data-panel="${e.target.dataset.tab}"]`).classList.add('active');
+    const body = stageEl.querySelector('.stage-body');
+    if (stageEl.classList.contains('open')) body.style.maxHeight = body.scrollHeight + 200 + 'px';
+  }
+});
+
+/* ---------------- Pipeline nav ---------------- */
+document.querySelectorAll('.pnode').forEach(node => {
+  node.addEventListener('click', () => {
+    const id = node.dataset.target;
+    const stage = document.getElementById(id);
+    if (!stage.classList.contains('open')) stage.querySelector('.stage-head').click();
+    stage.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+
+/* ---------------- Progress tracking (localStorage) ---------------- */
+const STORAGE_KEY = 'awa_portfolio_progress';
+const NOTES_KEY = 'awa_portfolio_notes';
+const BOOKMARK_KEY = 'awa_portfolio_bookmarks';
+const THEME_KEY = 'awa_theme';
+
+function loadProgress(){
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e){ return {}; }
+}
+function saveProgress(data){ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+
+function updateProgressBar(){
+  const checked = document.querySelectorAll('.tasklist input[type="checkbox"]:checked').length;
+  document.getElementById('progressLabel').textContent = `${checked} / ${totalTasks} tasks complete`;
+  const pct = totalTasks ? Math.round((checked/totalTasks)*100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+/* restore checkbox state */
+(function restoreProgress(){
+  const data = loadProgress();
+  document.querySelectorAll('.tasklist input[type="checkbox"]').forEach(cb => {
+    if (data[cb.id]) cb.checked = true;
+  });
+  updateProgressBar();
+})();
+
+stagesWrap.addEventListener('change', (e) => {
+  if (e.target.matches('.tasklist input[type="checkbox"]')) {
+    const data = loadProgress();
+    data[e.target.id] = e.target.checked;
+    saveProgress(data);
+    updateProgressBar();
+  }
+});
+
+/* ---------------- Notes ---------------- */
+function loadNotes(){ try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || {}; } catch(e){ return {}; } }
+(function restoreNotes(){
+  const data = loadNotes();
+  stages.forEach(s => {
+    const ta = document.getElementById(s.id + '-notes');
+    if (data[s.id]) ta.value = data[s.id];
+  });
+})();
+
+stagesWrap.addEventListener('input', (e) => {
+  if (e.target.classList.contains('notes-area')) {
+    const stageId = e.target.id.replace('-notes','');
+    const data = loadNotes();
+    data[stageId] = e.target.value;
+    localStorage.setItem(NOTES_KEY, JSON.stringify(data));
+    const tag = document.getElementById(stageId + '-saved');
+    tag.classList.add('show');
+    clearTimeout(tag._t);
+    tag._t = setTimeout(() => tag.classList.remove('show'), 1200);
+  }
+});
+
+/* ---------------- Bookmarks ---------------- */
+function loadBookmarks(){ try { return JSON.parse(localStorage.getItem(BOOKMARK_KEY)) || {}; } catch(e){ return {}; } }
+function toggleBookmark(stageId){
+  const data = loadBookmarks();
+  data[stageId] = !data[stageId];
+  localStorage.setItem(BOOKMARK_KEY, JSON.stringify(data));
+  renderBookmarks();
+}
+function renderBookmarks(){
+  const data = loadBookmarks();
+  document.querySelectorAll('.bookmark-btn').forEach(btn => {
+    const id = btn.dataset.bookmark;
+    if (data[id]) { btn.classList.add('active'); btn.textContent = '★ Bookmarked'; }
+    else { btn.classList.remove('active'); btn.textContent = '☆ Bookmark'; }
+  });
+}
+renderBookmarks();
+
+/* ---------------- Copy prompt ---------------- */
+function copyPrompt(btn){
+  const text = btn.parentElement.textContent.replace('Copy','').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const original = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(() => btn.textContent = original, 1200);
+  });
+}
+
+/* ---------------- Theme toggle ---------------- */
+const themeToggle = document.getElementById('themeToggle');
+function applyTheme(theme){
+  document.body.setAttribute('data-theme', theme);
+  themeToggle.textContent = theme === 'dark' ? 'Light mode' : 'Dark mode';
+  localStorage.setItem(THEME_KEY, theme);
+}
+applyTheme(localStorage.getItem(THEME_KEY) || 'light');
+themeToggle.addEventListener('click', () => {
+  applyTheme(document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+
+/* ---------------- Print ---------------- */
+document.getElementById('printBtn').addEventListener('click', () => {
+  document.querySelectorAll('.stage').forEach(s => {
+    s.classList.add('open');
+    s.querySelector('.stage-body').style.maxHeight = 'none';
+  });
+  setTimeout(() => window.print(), 150);
+});
+
+/* ---------------- Decision tree ---------------- */
+const dqBox = document.getElementById('dqBox');
+const dResult = document.getElementById('dResult');
+const decisionMap = {
+  q1: {
+    text: "Do you already have your project write-ups and bio drafted?",
+    options: [
+      {label:"Yes, content is ready", next:"q2a"},
+      {label:"No, I need to write it first", target:"stage-2", msg:"Start at Sheet 02 — Content & Copywriting. Draft your copy before touching layout or code."}
+    ]
+  },
+  q2a: {
+    text: "Do you have a color palette and type system chosen?",
+    options: [
+      {label:"Yes, design system is set", target:"stage-4", msg:"Start at Sheet 04 — Structure & Styling. You're ready to build."},
+      {label:"No, still deciding", target:"stage-3", msg:"Start at Sheet 03 — Design & Visual Identity to lock your system first."}
+    ]
+  }
+};
+let currentQ = 'q1';
+function renderDQ(){
+  const q = decisionMap[currentQ];
+  dqBox.innerHTML = `<div class="dq">${q.text}</div><div class="dopts">${q.options.map((o,i)=>`<button class="dopt" data-i="${i}">${o.label}</button>`).join('')}</div>`;
+}
+dqBox.addEventListener('click', (e) => {
+  if (e.target.classList.contains('dopt')) {
+    const q = decisionMap[currentQ];
+    const opt = q.options[e.target.dataset.i];
+    if (opt.next) { currentQ = opt.next; renderDQ(); }
+    else {
+      dResult.innerHTML = `${opt.msg} <a href="#${opt.target}" onclick="document.getElementById('${opt.target}').querySelector('.stage-head').click();">Jump to it →</a>`;
+      dResult.classList.add('show');
+    }
+  }
+});
+renderDQ();
+</script>
+</body>
+</html>
