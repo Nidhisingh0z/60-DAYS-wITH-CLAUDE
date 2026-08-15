@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Value Student Laptop — Compare & Decide</title>
+<style>
+  :root{
+    --bg:#0f1115;
+    --panel:#161923;
+    --panel2:#1c202c;
+    --border:#2a2f3d;
+    --border-light:#343b4d;
+    --text:#eef0f5;
+    --text-dim:#9aa1b4;
+    --text-faint:#6b7288;
+    --accent:#5b8cff;
+    --accent2:#7c5cff;
+    --good:#3ecf8e;
+    --warn:#f5a623;
+    --bad:#f0556b;
+    --radius:14px;
+    --shadow: 0 8px 30px rgba(0,0,0,0.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 10% -10%, #1a2440 0%, transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, #2a1a40 0%, transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height:1.5;
+    min-height:100vh;
+    padding: 28px 18px 60px;
+  }
+  .wrap{max-width:1180px; margin:0 auto;}
+
+  header.hero{margin-bottom:26px;}
+  .kicker{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--accent); background: rgba(91,140,255,0.12); border:1px solid rgba(91,140,255,0.3);
+    padding:5px 12px; border-radius:999px; margin-bottom:14px;
+  }
+  h1{font-size:clamp(24px,4vw,34px); margin:0 0 8px; font-weight:800; letter-spacing:-0.02em;}
+  .sub{color:var(--text-dim); font-size:15.5px; max-width:680px;}
+
+  .layout{display:grid; grid-template-columns: 300px 1fr; gap:22px; align-items:start;}
+  @media (max-width:900px){ .layout{grid-template-columns:1fr;} }
+
+  .panel{
+    background: linear-gradient(180deg, var(--panel), var(--panel2));
+    border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px; box-shadow:var(--shadow);
+  }
+  .panel h2{font-size:15px; margin:0 0 4px; font-weight:750;}
+  .panel .hint{color:var(--text-faint); font-size:12.5px; margin-bottom:16px;}
+
+  .weight-row{margin-bottom:18px;}
+  .weight-row:last-child{margin-bottom:6px;}
+  .weight-label{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;}
+  .weight-label span.name{font-size:13.5px; font-weight:650;}
+  .weight-label span.val{font-size:12.5px; color:var(--accent); font-variant-numeric:tabular-nums; font-weight:700;}
+  input[type=range]{
+    -webkit-appearance:none; width:100%; height:6px; border-radius:999px;
+    background: var(--border-light); outline:none; cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:18px; height:18px; border-radius:50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border:2px solid #0f1115; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.4);
+  }
+  input[type=range]::-moz-range-thumb{
+    width:18px; height:18px; border-radius:50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border:2px solid #0f1115; cursor:pointer;
+  }
+  .weight-desc{font-size:11.5px; color:var(--text-faint); margin-top:5px;}
+
+  .reset-btn{
+    width:100%; margin-top:8px; padding:10px 14px; border-radius:10px;
+    border:1px solid var(--border-light); background:transparent; color:var(--text-dim);
+    font-size:13px; font-weight:650; cursor:pointer; transition:.15s;
+  }
+  .reset-btn:hover{border-color:var(--accent); color:var(--accent);}
+
+  .persona-note{
+    margin-top:18px; padding:12px 14px; border-radius:10px;
+    background:rgba(91,140,255,0.08); border:1px solid rgba(91,140,255,0.2);
+    font-size:12px; color:var(--text-dim);
+  }
+  .persona-note b{color:var(--text);}
+
+  /* Ranked results */
+  .results{display:flex; flex-direction:column; gap:12px; margin-bottom:22px;}
+  .card{
+    background: linear-gradient(180deg, var(--panel), var(--panel2));
+    border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px 20px; box-shadow:var(--shadow); position:relative; overflow:hidden;
+    transition: transform .18s ease, border-color .18s ease;
+  }
+  .card.rank-1{border-color: rgba(62,207,142,0.5);}
+  .card-top{display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap;}
+  .card-id{display:flex; align-items:center; gap:12px;}
+  .rank-badge{
+    width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:15px; background:var(--border-light); color:var(--text-dim); flex-shrink:0;
+  }
+  .rank-1 .rank-badge{background:linear-gradient(135deg,var(--good),#2ea876); color:#06251a;}
+  .rank-2 .rank-badge{background:linear-gradient(135deg,#8896b3,#5c6785); color:#0f1115;}
+  .card h3{margin:0 0 2px; font-size:17px; font-weight:750;}
+  .card .config{font-size:12px; color:var(--text-faint);}
+  .score-chip{
+    text-align:right; flex-shrink:0;
+  }
+  .score-chip .num{font-size:22px; font-weight:800; color:var(--accent); font-variant-numeric:tabular-nums;}
+  .score-chip .label{font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-faint);}
+
+  .bar-track{height:8px; border-radius:999px; background:var(--border); margin:12px 0 14px; overflow:hidden;}
+  .bar-fill{height:100%; border-radius:999px; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition: width .35s ease;}
+
+  .metric-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:8px;
+  }
+  @media (max-width:720px){ .metric-grid{grid-template-columns:repeat(2,1fr);} }
+  .metric{
+    background:rgba(255,255,255,0.02); border:1px solid var(--border);
+    border-radius:9px; padding:9px 10px;
+  }
+  .metric .m-label{font-size:10px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-faint); margin-bottom:3px; display:flex; align-items:center; gap:4px;}
+  .metric .m-value{font-size:14px; font-weight:700; color:var(--text);}
+  .flag{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:14px; height:14px; border-radius:50%; background:var(--warn); color:#3a2600;
+    font-size:9px; font-weight:900; cursor:help; flex-shrink:0;
+  }
+  .flag.bad{background:var(--bad); color:#3a0510;}
+  .metric .m-sub{font-size:10px; color:var(--text-faint); margin-top:2px;}
+
+  details.src-toggle{margin-top:6px;}
+  details.src-toggle summary{
+    cursor:pointer; font-size:12px; color:var(--accent); font-weight:650; list-style:none; user-select:none;
+  }
+  details.src-toggle summary::-webkit-details-marker{display:none;}
+  details.src-toggle summary::before{content:"▸ "; display:inline-block; transition:transform .15s;}
+  details.src-toggle[open] summary::before{content:"▾ "; }
+  .src-list{margin:8px 0 0; padding:0; list-style:none; font-size:11.5px; color:var(--text-dim);}
+  .src-list li{padding:5px 0; border-top:1px solid var(--border);}
+  .src-list a{color:var(--accent); text-decoration:none;}
+  .src-list a:hover{text-decoration:underline;}
+
+  /* empty state */
+  .empty-metric{opacity:.65;}
+  .empty-metric .m-value{color:var(--text-faint); font-weight:600; font-size:12.5px;}
+
+  /* Big panels below */
+  .section{margin-top:26px;}
+  .section-title{display:flex; align-items:center; gap:10px; margin-bottom:12px;}
+  .section-title h2{font-size:16px; margin:0; font-weight:750;}
+  .section-title .icon{
+    width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    background:rgba(91,140,255,0.14); color:var(--accent); font-size:13px; font-weight:800;
+  }
+
+  .sources-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px;}
+  @media (max-width:760px){ .sources-grid{grid-template-columns:1fr;} }
+  .source-group h4{font-size:12.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-faint); margin:0 0 8px;}
+  .source-group ul{margin:0 0 16px; padding:0; list-style:none;}
+  .source-group li{
+    padding:9px 10px; margin-bottom:6px; border-radius:9px; background:rgba(255,255,255,0.02);
+    border:1px solid var(--border); font-size:12.5px;
+  }
+  .source-group li a{color:var(--text); font-weight:650; text-decoration:none;}
+  .source-group li a:hover{color:var(--accent);}
+  .source-group li .src-meta{display:block; color:var(--text-faint); font-size:11px; margin-top:2px;}
+
+  .research-panel{
+    background: linear-gradient(180deg, var(--panel), var(--panel2));
+    border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;
+  }
+  .research-summary{
+    padding:16px 20px; cursor:pointer; display:flex; align-items:center; justify-content:space-between;
+    list-style:none; user-select:none; font-weight:700; font-size:14.5px;
+  }
+  .research-summary::-webkit-details-marker{display:none;}
+  .chev{transition:transform .2s ease; color:var(--text-faint);}
+  details[open] .chev{transform:rotate(90deg);}
+  .research-body{padding:0 20px 20px; font-size:13.5px; color:var(--text-dim);}
+  .research-body h4{color:var(--text); font-size:13px; margin:16px 0 6px;}
+  .research-body p{margin:0 0 10px;}
+  .conflict-box{
+    background:rgba(245,166,35,0.08); border:1px solid rgba(245,166,35,0.3);
+    border-radius:9px; padding:10px 12px; margin:8px 0; font-size:12.5px;
+  }
+  .conflict-box b{color:var(--warn);}
+  .estimate-box{
+    background:rgba(240,85,107,0.08); border:1px solid rgba(240,85,107,0.3);
+    border-radius:9px; padding:10px 12px; margin:8px 0; font-size:12.5px;
+  }
+  .estimate-box b{color:var(--bad);}
+
+  footer{margin-top:34px; text-align:center; color:var(--text-faint); font-size:11.5px;}
+
+  .loading-wrap{display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; gap:14px;}
+  .spinner{
+    width:34px; height:34px; border-radius:50%;
+    border:3px solid var(--border-light); border-top-color:var(--accent);
+    animation:spin 0.9s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .loading-wrap p{color:var(--text-faint); font-size:13px; margin:0;}
+
+  .top-pick-banner{
+    display:flex; align-items:center; gap:10px; margin-bottom:16px;
+    padding:12px 16px; border-radius:12px; background:rgba(62,207,142,0.08);
+    border:1px solid rgba(62,207,142,0.3); font-size:13px; color:var(--text);
+  }
+  .top-pick-banner b{color:var(--good);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="kicker">Compare &amp; Decide · Budget Student Laptops</div>
+    <h1>Which laptop is actually the best value for a student on a budget?</h1>
+    <p class="sub">Adjust how much each factor matters to you and the ranking updates instantly. Every number below is pulled from a named, linked source — nothing here is invented.</p>
+  </header>
+
+  <div id="app">
+    <div class="loading-wrap" id="loadingState">
+      <div class="spinner"></div>
+      <p>Loading sourced spec data…</p>
+    </div>
+  </div>
+
+  <footer>
+    Built for informational comparison only — prices and specs change frequently and should be re-verified with retailers before purchase. Not sponsored by Apple, Dell, Lenovo, or ASUS.
+  </footer>
+
+</div>
+
+<script>
+(function(){
+
+  // ---------------------------------------------------------------------
+  // SOURCED DATA
+  // Every numeric field below carries a `sources` array with real, named
+  // citations. `estimate:true` flags a value that is not a directly
+  // sourced measurement (either missing independent data, or a
+  // manufacturer claim rather than a lab test).
+  // ---------------------------------------------------------------------
+
+  const LAPTOPS = [
+    {
+      id: "mba",
+      name: "Apple MacBook Air 13\u2033 (M4, 2025)",
+      config: "Base config: M4 chip, 16GB unified memory, 256GB SSD",
+      price: { value: 999, label: "$999", note: "Official Apple starting price for the base 16GB/256GB configuration.",
+        sources: [
+          { name: "Apple Newsroom — MacBook Air M4 announcement", url: "https://www.apple.com/newsroom/2025/03/apple-introduces-the-new-macbook-air-with-the-m4-chip-and-a-sky-blue-color/" },
+          { name: "HotHardware — M4 MacBook Air Geekbench coverage (confirms $999 entry price)", url: "https://hothardware.com/news/apple-m4-macbook-air-breaks-cover-with-interesting-geekbench" }
+        ]
+      },
+      ram: { value: 16, label: "16GB", note: "Unified memory, base configuration.",
+        sources: [{ name: "Apple — MacBook Air Tech Specs", url: "https://support.apple.com/en-us/122209" }] },
+      storage: { value: 256, label: "256GB", note: "Base SSD, expandable to 2TB at checkout.",
+        sources: [{ name: "Apple — MacBook Air product page", url: "https://www.apple.com/macbook-air/" }] },
+      perf: { value: 15031, label: "15,031", unit: "Geekbench 6 multi-core", note: "Average of 617 user-submitted results for the 13\u2033 M4 (10-core CPU/8-core GPU) model.",
+        sources: [{ name: "Geekbench Browser — MacBook Air (13\u2033, 2025) results", url: "https://browser.geekbench.com/macs/macbook-air-13-inch-2025-10c-cpu-8c-gpu" }] },
+      battery: { value: 15.5, label: "15h 30m", unit: "hrs (independently tested)", estimate:false, note: "Laptop Mag's standardized wireless-web battery test (150 nits). Apple's own marketing claim is up to 18 hours.",
+        sources: [
+          { name: "Laptop Mag — MacBook Air 13\u2033 M4 review (battery test)", url: "https://www.laptopmag.com/laptops/macbooks/apple-macbook-air-13-inch-m4-review" },
+          { name: "Apple Newsroom — \u201cup to 18 hours\u201d manufacturer claim", url: "https://www.apple.com/newsroom/2025/03/apple-introduces-the-new-macbook-air-with-the-m4-chip-and-a-sky-blue-color/" }
+        ]
+      }
+    },
+    {
+      id: "dell",
+      name: "Dell Inspiron 15 3535",
+      config: "Base config: AMD Ryzen 5 7520U, 8GB RAM, 512GB SSD",
+      price: { value: 549.99, label: "$549.99", note: "Official Dell.com \u201cstarting at\u201d price for the base configuration.",
+        sources: [{ name: "Dell.com — New Inspiron 15 (3535) product page", url: "https://www.dell.com/en-us/shop/dell-laptops/inspiron-15-laptop/spd/inspiron-15-3535-laptop" }] },
+      ram: { value: 8, label: "8GB", note: "Base RAM; configurable up to 16GB. RAM is soldered (not user-upgradeable) on this model.",
+        sources: [{ name: "NanoReview — Dell Inspiron 15 3535 full specs", url: "https://nanoreview.net/en/laptop/dell-inspiron-15-3535" }] },
+      storage: { value: 512, label: "512GB", note: "Base SSD; configurable up to 2TB.",
+        sources: [{ name: "NanoReview — Dell Inspiron 15 3535 full specs", url: "https://nanoreview.net/en/laptop/dell-inspiron-15-3535" }] },
+      perf: { value: 3896, label: "3,896", unit: "Geekbench 6 multi-core",
+        sources: [{ name: "NanoReview — Dell Inspiron 15 3535 benchmark data", url: "https://nanoreview.net/en/laptop/dell-inspiron-15-3535" }] },
+      battery: { value: 11.5, label: "11h 31m", unit: "hrs (manufacturer claim)", estimate:true, note: "This is Dell's own rated figure for the 41Wh battery, not an independent lab test. Real-world owner reports cluster closer to 6\u20138 hours \u2014 see \u201cHow this was researched\u201d for the conflict.",
+        sources: [
+          { name: "Adapter Family — Dell Inspiron 15 3535 review", url: "https://www.adapterfamily.com/blog/dell-inspiron-15-3535-affordable-performance-with-a-smooth-display/" },
+          { name: "Vivid Repairs — Dell Inspiron 15 3535 review (real-world battery)", url: "https://www.vividrepairs.co.uk/dell-inspiron-15-3535-ryzen-5-7520u-review" }
+        ]
+      }
+    },
+    {
+      id: "lenovo",
+      name: "Lenovo IdeaPad Slim 5 15\u2033 (AMD)",
+      config: "Representative config: AMD Ryzen 5 7535HS, 16GB RAM, 512GB SSD",
+      price: { value: 670, label: "~$670", estimate:true, note: "Notebookcheck's reviewed retail price for the Slim 5 15\u2033 AMD configuration. Lenovo sells many regional SKUs at different prices \u2014 treat as representative, not a fixed MSRP.",
+        sources: [{ name: "Notebookcheck — Lenovo IdeaPad Slim 5-15 review (AMD, price)", url: "https://www.notebookcheck.net/Lenovo-IdeaPad-Slim-5-15-laptop-review-Great-value-for-money-with-an-AMD-SoC-and-an-aluminum-case.945877.0.html" }] },
+      ram: { value: 16, label: "16GB", note: "Base RAM for the Gen 10 15\u2033 AMD configuration; configurable up to 32GB.",
+        sources: [{ name: "NanoReview — Lenovo IdeaPad Slim 5 (15\u2033 Gen 10) full specs", url: "https://nanoreview.net/en/laptop/lenovo-ideapad-slim-5-14-gen-10" }] },
+      storage: { value: 512, label: "512GB", note: "Base SSD; configurable up to 1TB.",
+        sources: [{ name: "NanoReview — Lenovo IdeaPad Slim 5 (15\u2033 Gen 10) full specs", url: "https://nanoreview.net/en/laptop/lenovo-ideapad-slim-5-14-gen-10" }] },
+      perf: { value: 8073, label: "8,073", unit: "Geekbench 6 multi-core", note: "Ryzen 5 7535HS configuration.",
+        sources: [{ name: "NanoReview — Lenovo IdeaPad Slim 5 (15\u2033 Gen 10) benchmark data", url: "https://nanoreview.net/en/laptop/lenovo-ideapad-slim-5-14-gen-10" }] },
+      battery: { value: 14, label: "~14+ hrs", unit: "hrs (independently tested, related config)", estimate:true, note: "Notebookcheck measured 14+ hours WLAN runtime on the AMD Slim 5-15 it tested. Battery capacity for the current Gen 10 base config is 54.7Wh, so this figure is a close but not identical-generation reference point.",
+        sources: [
+          { name: "Notebookcheck — Lenovo IdeaPad Slim 5-15 review (battery runtime)", url: "https://www.notebookcheck.net/Lenovo-IdeaPad-Slim-5-15-laptop-review-Great-value-for-money-with-an-AMD-SoC-and-an-aluminum-case.945877.0.html" },
+          { name: "NanoReview — battery capacity (54.7Wh / 70Wh options)", url: "https://nanoreview.net/en/laptop/lenovo-ideapad-slim-5-14-gen-10" }
+        ]
+      }
+    },
+    {
+      id: "asus",
+      name: "ASUS Vivobook 15 (X1504)",
+      config: "Base config: AMD Ryzen 3 7320U, 8GB RAM, 256GB SSD",
+      price: { value: 699, label: "$699", note: "ASUS/Walmart listed MSRP for the X1504VAP-WB51-CB base configuration (Ryzen 3, 8GB/256GB) ahead of a promotional discount.",
+        sources: [{ name: "Yahoo Finance — ASUS Back to School Sales Event pricing", url: "https://finance.yahoo.com/news/asus-announces-limited-time-back-103900302.html" }] },
+      ram: { value: 8, label: "8GB", note: "Base RAM; configurable up to 16GB.",
+        sources: [
+          { name: "NanoReview — Asus Vivobook 15 (F1504/X1504) full specs", url: "https://nanoreview.net/en/laptop/asus-vivobook-15-f1504-x1504" },
+          { name: "ASUS — Vivobook 15 (X1504) product page", url: "https://www.asus.com/laptops/for-home/vivobook/asus-vivobook-15-x1504/" }
+        ]
+      },
+      storage: { value: 256, label: "256GB", note: "Base SSD; configurable up to 1TB.",
+        sources: [{ name: "NanoReview — Asus Vivobook 15 (F1504/X1504) full specs", url: "https://nanoreview.net/en/laptop/asus-vivobook-15-f1504-x1504" }] },
+      perf: { value: 6492, label: "6,492", unit: "Geekbench 6 multi-core",
+        sources: [{ name: "NanoReview — Asus Vivobook 15 (F1504/X1504) benchmark data", url: "https://nanoreview.net/en/laptop/asus-vivobook-15-f1504-x1504" }] },
+      battery: { value: null, label: "Not independently tested", unit: "", estimate:true, note: "We could not find a credible independent runtime test for the current X1504 generation \u2014 only the 42Wh battery capacity is documented. Rather than invent a number, this laptop is scored as neutral (average) on battery until sourced data is available.",
+        sources: [
+          { name: "NanoReview — battery capacity (42Wh)", url: "https://nanoreview.net/en/laptop/asus-vivobook-15-f1504-x1504" },
+          { name: "Notebookcheck — Asus Vivobook 15 X1504VA datasheet (42Wh)", url: "https://www.notebookcheck.com/Asus-Vivobook-15-X1504VA.749671.0.html" }
+        ]
+      }
+    }
+  ];
+
+  const CRITERIA = [
+    { key:"price",   name:"Price",            desc:"Lower starting price scores higher.", direction:-1 },
+    { key:"ramstor", name:"Storage & RAM",    desc:"More base RAM + storage scores higher.", direction:1 },
+    { key:"perf",    name:"Performance (CPU)",desc:"Higher Geekbench 6 multi-core scores higher.", direction:1 },
+    { key:"battery", name:"Battery Life",     desc:"Longer real-world runtime scores higher.", direction:1 }
+  ];
+
+  let weights = { price:25, ramstor:25, perf:25, battery:25 };
+
+  // ---------------------------------------------------------------------
+  // Scoring
+  // ---------------------------------------------------------------------
+  function normalize(list, accessor, direction){
+    const vals = list.map(accessor).filter(v => v !== null && v !== undefined);
+    if(vals.length === 0) return list.map(()=>50);
+    const min = Math.min(...vals), max = Math.max(...vals);
+    return list.map(item=>{
+      const v = accessor(item);
+      if(v === null || v === undefined) return 50; // neutral score for missing data
+      if(max === min) return 100;
+      let pct = (v - min) / (max - min);
+      if(direction === -1) pct = 1 - pct;
+      return Math.round(pct * 1000)/10;
+    });
+  }
+
+  function computeScores(){
+    const priceScores = normalize(LAPTOPS, l => l.price.value, -1);
+    const ramScores = normalize(LAPTOPS, l => l.ram.value, 1);
+    const storScores = normalize(LAPTOPS, l => l.storage.value, 1);
+    const perfScores = normalize(LAPTOPS, l => l.perf.value, 1);
+    const battScores = normalize(LAPTOPS, l => l.battery.value, 1);
+
+    const totalWeight = Object.values(weights).reduce((a,b)=>a+b,0) || 1;
+
+    return LAPTOPS.map((l,i)=>{
+      const ramstorScore = (ramScores[i] + storScores[i]) / 2;
+      const sub = {
+        price: priceScores[i],
+        ramstor: ramstorScore,
+        perf: perfScores[i],
+        battery: battScores[i]
+      };
+      const composite = (
+        sub.price   * weights.price +
+        sub.ramstor * weights.ramstor +
+        sub.perf    * weights.perf +
+        sub.battery * weights.battery
+      ) / totalWeight;
+      return { laptop:l, sub, composite: Math.round(composite*10)/10 };
+    }).sort((a,b)=> b.composite - a.composite);
+  }
+
+  // ---------------------------------------------------------------------
+  // Rendering
+  // ---------------------------------------------------------------------
+  function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function metricHTML(field, displayLabel){
+    if(field.value === null || field.value === undefined){
+      return `<div class="metric empty-metric">
+        <div class="m-label">${esc(displayLabel)} <span class="flag bad" title="${esc(field.note||'No sourced data available.')}">!</span></div>
+        <div class="m-value">${esc(field.label)}</div>
+      </div>`;
+    }
+    const flagHTML = field.estimate
+      ? `<span class="flag" title="${esc(field.note || 'This value is an estimate or manufacturer claim, not an independently verified measurement.')}">!</span>`
+      : '';
+    return `<div class="metric">
+      <div class="m-label">${esc(displayLabel)} ${flagHTML}</div>
+      <div class="m-value">${esc(field.label)}${field.unit ? ` <span style="color:var(--text-faint);font-weight:500;font-size:10.5px;">${esc(field.unit)}</span>`:''}</div>
+    </div>`;
+  }
+
+  function sourcesForCard(l){
+    const groups = [
+      ["Price", l.price.sources],
+      ["RAM", l.ram.sources],
+      ["Storage", l.storage.sources],
+      ["Performance", l.perf.sources],
+      ["Battery", l.battery.sources]
+    ];
+    let items = "";
+    groups.forEach(([label, srcs])=>{
+      srcs.forEach(s=>{
+        items += `<li><b>${esc(label)}:</b> <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a></li>`;
+      });
+    });
+    return items;
+  }
+
+  function renderResults(){
+    const ranked = computeScores();
+    const resultsEl = document.getElementById('resultsList');
+    if(!resultsEl) return;
+
+    let bannerHTML = "";
+    if(ranked.length){
+      const top = ranked[0];
+      bannerHTML = `<div class="top-pick-banner">🏆 Based on your current weights, <b>${esc(top.laptop.name)}</b> ranks best overall (${top.composite}/100).</div>`;
+    }
+
+    let html = bannerHTML;
+    ranked.forEach((r, idx)=>{
+      const l = r.laptop;
+      html += `
+      <div class="card ${idx===0?'rank-1':idx===1?'rank-2':''}">
+        <div class="card-top">
+          <div class="card-id">
+            <div class="rank-badge">${idx+1}</div>
+            <div>
+              <h3>${esc(l.name)}</h3>
+              <div class="config">${esc(l.config)}</div>
+            </div>
+          </div>
+          <div class="score-chip">
+            <div class="num">${r.composite}</div>
+            <div class="label">/ 100 match</div>
+          </div>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.max(2,r.composite)}%"></div></div>
+        <div class="metric-grid">
+          ${metricHTML(l.price, "Price")}
+          ${(function(){
+            const combined = {
+              value: (l.ram.value!=null && l.storage.value!=null) ? 1 : null,
+              label: `${l.ram.label} / ${l.storage.label}`,
+              estimate: l.ram.estimate || l.storage.estimate,
+              note: "RAM: " + (l.ram.note||"") + " Storage: " + (l.storage.note||"")
+            };
+            return metricHTML(combined, "RAM / Storage");
+          })()}
+          ${metricHTML(l.perf, "Performance")}
+          ${metricHTML(l.battery, "Battery")}
+        </div>
+        <details class="src-toggle">
+          <summary>View sources for this laptop's data</summary>
+          <ul class="src-list">${sourcesForCard(l)}</ul>
+        </details>
+      </div>`;
+    });
+    resultsEl.innerHTML = html;
+  }
+
+  function renderWeightPanel(){
+    const el = document.getElementById('weightPanel');
+    let html = `<h2>Weight what matters to you</h2><p class="hint">Drag to prioritize — the ranking below updates live.</p>`;
+    CRITERIA.forEach(c=>{
+      html += `
+      <div class="weight-row">
+        <div class="weight-label">
+          <span class="name">${esc(c.name)}</span>
+          <span class="val" id="val-${c.key}">${weights[c.key]}</span>
+        </div>
+        <input type="range" min="0" max="100" step="1" value="${weights[c.key]}" data-key="${c.key}" class="weight-slider">
+        <div class="weight-desc">${esc(c.desc)}</div>
+      </div>`;
+    });
+    html += `<button class="reset-btn" id="resetWeights">Reset to equal weights</button>
+      <div class="persona-note"><b>Who this is for:</b> a student/budget buyer choosing the best value laptop for everyday use and study.</div>`;
+    el.innerHTML = html;
+
+    el.querySelectorAll('.weight-slider').forEach(slider=>{
+      slider.addEventListener('input', e=>{
+        const key = e.target.getAttribute('data-key');
+        weights[key] = parseInt(e.target.value,10);
+        document.getElementById('val-'+key).textContent = weights[key];
+        renderResults();
+      });
+    });
+    document.getElementById('resetWeights').addEventListener('click', ()=>{
+      weights = { price:25, ramstor:25, perf:25, battery:25 };
+      renderWeightPanel();
+      renderResults();
+    });
+  }
+
+  function renderSourcesPanel(){
+    const el = document.getElementById('sourcesPanel');
+    const byLaptop = LAPTOPS.map(l=>{
+      let items = sourcesForCard(l);
+      return `<div class="source-group"><h4>${esc(l.name)}</h4><ul>${items}</ul></div>`;
+    }).join("");
+    el.innerHTML = `
+      <div class="section-title"><div class="icon">S</div><h2>Sources panel — every citation used</h2></div>
+      <div class="sources-grid">${byLaptop}</div>
+    `;
+  }
+
+  function renderResearchPanel(){
+    const el = document.getElementById('researchPanel');
+    el.innerHTML = `
+      <details>
+        <summary class="research-summary"><span>How this was researched</span><span class="chev">▸</span></summary>
+        <div class="research-body">
+          <p>All specs and prices were gathered from manufacturer sites (Apple, Dell, ASUS), retailer listings (Dell.com, Walmart/ASUS promotions), and independent benchmark/review databases (NanoReview, Geekbench Browser, Notebookcheck, Laptop Mag). Each metric card above lists the exact source used for that number.</p>
+
+          <h4>Methodology</h4>
+          <p><b>Price</b> uses each brand's official "starting" price for its base advertised configuration, so comparisons reflect entry-level cost rather than a maxed-out build.</p>
+          <p><b>RAM &amp; Storage</b> combines the base RAM and base SSD capacity into a single normalized score (each is min–max scaled 0–100 across the four laptops, then averaged).</p>
+          <p><b>Performance</b> uses Geekbench 6 multi-core scores, the most consistent cross-platform CPU benchmark available for both Apple Silicon and x86 chips.</p>
+          <p><b>Battery Life</b> mixes methodologies where that's the best available real data — see the conflict note below.</p>
+
+          <h4>Conflicts we had to resolve</h4>
+          <div class="conflict-box"><b>Battery-life methodology differs by brand.</b> The MacBook Air and Lenovo figures come from independent lab-style tests (Laptop Mag, Notebookcheck). The Dell figure is Dell's own manufacturer claim, because independent lab data for this exact SKU wasn't available — real-world owner reports for the Dell run noticeably lower (6–8 hrs vs. the claimed 11h31m). We labeled the Dell number as an estimate/manufacturer claim rather than presenting it as equivalent to the independently tested numbers.</div>
+          <div class="conflict-box"><b>Lenovo price and battery figures come from a closely related but not pixel-identical configuration</b> (Notebookcheck reviewed an AMD Slim 5-15 unit; the RAM/storage/performance figures above come from the newer Gen 10 NanoReview listing). We flagged both fields as estimates for transparency rather than presenting them as exact matches to the Gen 10 base SKU.</div>
+
+          <h4>Data we could not verify</h4>
+          <div class="estimate-box"><b>ASUS Vivobook 15 battery runtime</b> — we found the battery's rated capacity (42Wh) in multiple sources, but no independent, current-generation runtime test we could cite with confidence. Rather than fabricate an hours figure, the tool scores this laptop as neutral (50/100) on the Battery criterion and clearly marks the field "Not independently tested" in its card.</div>
+
+          <h4>What "base configuration" means here</h4>
+          <p>Every laptop in this comparison ships in many configurations (more RAM, more storage, different CPUs). To keep the comparison fair, we used each model's lowest advertised/base configuration consistently across Price, RAM, and Storage. If you're shopping for a specific configuration, treat these numbers as a starting point and re-check current listings.</p>
+        </div>
+      </details>
+    `;
+  }
+
+  function buildApp(){
+    const app = document.getElementById('app');
+    app.innerHTML = `
+      <div class="layout">
+        <aside class="panel" id="weightPanel"></aside>
+        <main>
+          <div class="results" id="resultsList"></div>
+        </main>
+      </div>
+
+      <div class="section" id="sourcesPanel"></div>
+
+      <div class="section research-panel" id="researchPanel"></div>
+    `;
+    renderWeightPanel();
+    renderResults();
+    renderSourcesPanel();
+    renderResearchPanel();
+  }
+
+  // Simulate a brief, honest loading state then render.
+  window.addEventListener('DOMContentLoaded', ()=>{
+    try{
+      setTimeout(buildApp, 380);
+    }catch(err){
+      document.getElementById('app').innerHTML =
+        `<div class="panel" style="text-align:center; color:var(--bad);">
+          Something went wrong loading the comparison data. Please refresh the page.
+        </div>`;
+      console.error(err);
+    }
+  });
+})();
+</script>
+</body>
+</html>
