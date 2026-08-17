@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Defend Your Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF9F6;
+    --surface:#FFFFFF;
+    --ink:#1B1B1A;
+    --ink-soft:#55534E;
+    --muted:#96938C;
+    --line:#E7E4DD;
+    --line-strong:#D3CFC5;
+    --accent:#2B4C6F;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#E7ECF1;
+    --weak:#A8402F;
+    --weak-soft:#F5E4E0;
+    --moderate:#B8863B;
+    --moderate-soft:#F6EDDD;
+    --strong:#2F6E4F;
+    --strong-soft:#E3EEE8;
+    --neutral:#B9B7B2;
+    --neutral-soft:#EFEEEA;
+    --radius-sm:4px;
+    --radius-md:8px;
+    --radius-lg:14px;
+    --font-display:'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+    --font-body:'Inter', 'Segoe UI', system-ui, sans-serif;
+    --font-mono:'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+    --shadow-sm: 0 1px 2px rgba(27,27,26,0.06);
+    --shadow-md: 0 6px 24px rgba(27,27,26,0.08);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+    font-size:15px;
+    line-height:1.5;
+  }
+  ::selection{ background:var(--accent-soft); color:var(--accent); }
+  button{ font-family:inherit; cursor:pointer; }
+  textarea, input, select{ font-family:inherit; }
+  a{ color:inherit; }
+
+  :focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+    border-radius:2px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+
+  /* ---------- Layout shell ---------- */
+  #app{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  header.topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:14px 24px;
+    border-bottom:1px solid var(--line);
+    background:var(--surface);
+    position:sticky;
+    top:0;
+    z-index:40;
+  }
+  .brand{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  .brand .mark{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:16px;
+    letter-spacing:0.01em;
+  }
+  .brand .case-id{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--muted);
+    letter-spacing:0.03em;
+  }
+  .topbar-right{ display:flex; align-items:center; gap:10px; }
+
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--ink-soft);
+    background:var(--paper);
+    border:1px solid var(--line);
+    padding:5px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .chip button.link-btn{
+    background:none;border:none;color:var(--accent);font-family:inherit;font-size:11px;padding:0;text-decoration:underline;
+  }
+
+  .icon-btn{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius-sm);
+    padding:7px 12px;
+    font-size:12.5px;
+    font-family:var(--font-body);
+    font-weight:500;
+    color:var(--ink);
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .icon-btn:hover{ border-color:var(--line-strong); background:var(--paper); }
+  .icon-btn.primary{
+    background:var(--ink);
+    border-color:var(--ink);
+    color:#fff;
+  }
+  .icon-btn.primary:hover{ background:#000; }
+  .icon-btn:disabled{ opacity:.4; cursor:not-allowed; }
+
+  .progress-ring-wrap{ display:flex; align-items:center; gap:8px; }
+  .progress-ring-label{ font-family:var(--font-mono); font-size:11px; color:var(--ink-soft); text-align:right; line-height:1.3; }
+  .progress-ring-label b{ display:block; font-size:13px; color:var(--ink); font-weight:600; }
+
+  main.stage{
+    flex:1;
+    display:flex;
+    min-height:0;
+  }
+
+  /* ---------- Upload phase ---------- */
+  .upload-stage{
+    flex:1;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:56px 24px 80px;
+    overflow-y:auto;
+  }
+  .upload-inner{ width:100%; max-width:660px; }
+  .upload-eyebrow{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:10px;
+  }
+  .upload-title{
+    font-family:var(--font-display);
+    font-size:34px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0 0 14px;
+    line-height:1.15;
+  }
+  .upload-sub{
+    color:var(--ink-soft);
+    font-size:15.5px;
+    line-height:1.6;
+    margin:0 0 32px;
+    max-width:560px;
+  }
+  .upload-sub strong{ color:var(--ink); font-weight:600; }
+
+  .dropzone{
+    border:1.5px dashed var(--line-strong);
+    border-radius:var(--radius-lg);
+    background:var(--surface);
+    padding:36px 24px;
+    text-align:center;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .dropzone.dragover{
+    border-color:var(--accent);
+    background:var(--accent-soft);
+  }
+  .dropzone-title{ font-weight:600; font-size:15px; margin:0 0 4px; }
+  .dropzone-sub{ font-size:13px; color:var(--muted); margin:0 0 16px; }
+  .dropzone input[type=file]{ display:none; }
+
+  .divider-row{
+    display:flex; align-items:center; gap:12px; margin:24px 0;
+    color:var(--muted); font-size:12px; font-family:var(--font-mono);
+  }
+  .divider-row::before, .divider-row::after{
+    content:''; flex:1; height:1px; background:var(--line);
+  }
+
+  textarea.paste-area{
+    width:100%;
+    min-height:150px;
+    border:1px solid var(--line);
+    border-radius:var(--radius-md);
+    padding:14px 16px;
+    font-size:14px;
+    line-height:1.55;
+    resize:vertical;
+    background:var(--surface);
+    color:var(--ink);
+  }
+  textarea.paste-area:focus{ border-color:var(--accent); }
+
+  .upload-actions{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:18px;
+  }
+  .file-badge{ font-size:12.5px; color:var(--ink-soft); font-family:var(--font-mono); }
+
+  .begin-btn{
+    background:var(--ink);
+    color:#fff;
+    border:none;
+    padding:12px 22px;
+    border-radius:var(--radius-sm);
+    font-size:14px;
+    font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:background .15s ease, transform .1s ease;
+  }
+  .begin-btn:hover:not(:disabled){ background:#000; }
+  .begin-btn:disabled{ background:var(--neutral); cursor:not-allowed; }
+
+  .calibration-row{
+    display:flex; flex-wrap:wrap; gap:8px; margin-top:22px;
+  }
+
+  .history-block{ margin-top:56px; }
+  .history-block h2{
+    font-family:var(--font-mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--muted); font-weight:500; margin:0 0 12px;
+  }
+  .history-item{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:13px 14px; border:1px solid var(--line); border-radius:var(--radius-md);
+    background:var(--surface); margin-bottom:8px; font-size:13.5px;
+    transition:border-color .15s ease;
+  }
+  .history-item:hover{ border-color:var(--line-strong); }
+  .history-item .h-left{ display:flex; flex-direction:column; gap:2px; }
+  .history-item .h-title{ font-weight:600; }
+  .history-item .h-meta{ color:var(--muted); font-family:var(--font-mono); font-size:11.5px; }
+  .history-item button{
+    background:none; border:1px solid var(--line); border-radius:var(--radius-sm);
+    padding:6px 12px; font-size:12px; color:var(--ink);
+  }
+  .history-item button:hover{ border-color:var(--accent); color:var(--accent); }
+
+  /* ---------- Extracting (skeleton) ---------- */
+  .skeleton-row{
+    height:14px; border-radius:4px; background:linear-gradient(90deg, var(--neutral-soft) 25%, #f5f4f0 37%, var(--neutral-soft) 63%);
+    background-size:400% 100%;
+    animation:shimmer 1.4s ease infinite;
+    margin-bottom:8px;
+  }
+  @keyframes shimmer{ 0%{background-position:100% 0;} 100%{background-position:0 0;} }
+
+  /* ---------- Interview phase layout ---------- */
+  .interview-shell{
+    flex:1;
+    display:grid;
+    grid-template-columns:300px 1fr;
+    min-height:0;
+    width:100%;
+  }
+
+  aside.docket{
+    border-right:1px solid var(--line);
+    background:var(--surface);
+    overflow-y:auto;
+    padding:20px 16px 40px;
+  }
+  .docket-header{
+    display:flex; align-items:baseline; justify-content:space-between; margin-bottom:14px;
+  }
+  .docket-header h2{
+    font-family:var(--font-mono); font-size:11.5px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--muted); font-weight:500; margin:0;
+  }
+  .docket-count{ font-family:var(--font-mono); font-size:11px; color:var(--muted); }
+
+  .claim-card{
+    border:1px solid var(--line);
+    border-radius:var(--radius-md);
+    padding:12px 13px;
+    margin-bottom:10px;
+    background:var(--paper);
+    cursor:default;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .claim-card.is-active{
+    border-color:var(--accent);
+    box-shadow:0 0 0 1px var(--accent);
+    background:var(--surface);
+  }
+  .claim-card-top{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:7px; gap:6px;
+  }
+  .exhibit-tag{
+    font-family:var(--font-mono); font-size:10.5px; color:var(--muted); letter-spacing:0.03em;
+  }
+  .status-badge{
+    font-family:var(--font-mono);
+    font-size:10px;
+    padding:2px 7px;
+    border-radius:999px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    white-space:nowrap;
+  }
+  .status-weak{ background:var(--weak-soft); color:var(--weak); }
+  .status-moderate{ background:var(--moderate-soft); color:var(--moderate); }
+  .status-strong{ background:var(--strong-soft); color:var(--strong); }
+
+  .claim-text{
+    font-size:13px; line-height:1.45; color:var(--ink); margin:0 0 8px;
+  }
+  .claim-meta-row{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:7px;
+  }
+  .claim-category{
+    font-size:10.5px; color:var(--ink-soft); font-family:var(--font-mono);
+  }
+  .claim-probes{ font-size:10.5px; color:var(--muted); font-family:var(--font-mono); }
+
+  .confidence-bar{
+    height:5px; width:100%; background:var(--neutral-soft); border-radius:999px; overflow:hidden;
+  }
+  .confidence-fill{
+    height:100%; border-radius:999px; transition:width .5s cubic-bezier(.4,0,.2,1), background .3s ease;
+  }
+  .fill-weak{ background:var(--weak); }
+  .fill-moderate{ background:var(--moderate); }
+  .fill-strong{ background:var(--strong); }
+  .fill-neutral{ background:var(--neutral); }
+
+  /* ---------- Transcript ---------- */
+  .interview-main{
+    display:flex; flex-direction:column; min-height:0;
+  }
+  .transcript{
+    flex:1; overflow-y:auto; padding:26px 32px 12px;
+  }
+  .transcript-inner{ max-width:720px; margin:0 auto; }
+
+  .intro-note{
+    font-size:13px; color:var(--muted); text-align:center; margin:0 0 28px;
+    font-family:var(--font-mono);
+  }
+
+  .bubble{
+    margin-bottom:18px;
+    animation:fadeInUp .35s ease both;
+  }
+  @keyframes fadeInUp{ from{ opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .bubble-label{
+    display:flex; align-items:center; gap:8px; margin-bottom:6px;
+  }
+  .bubble-label .who{
+    font-family:var(--font-mono); font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted);
+  }
+  .bubble-label .probe-type{
+    font-family:var(--font-mono); font-size:10px; background:var(--accent-soft); color:var(--accent);
+    padding:2px 7px; border-radius:999px;
+  }
+  .bubble-label .ts{ font-family:var(--font-mono); font-size:10px; color:var(--neutral); margin-left:auto; }
+
+  .bubble-body{
+    padding:13px 16px;
+    border-radius:var(--radius-md);
+    font-size:14.5px;
+    line-height:1.55;
+  }
+  .bubble.question .bubble-body{
+    background:var(--surface); border:1px solid var(--line); color:var(--ink);
+    border-top-left-radius:2px;
+  }
+  .bubble.answer{ display:flex; flex-direction:column; align-items:flex-end; }
+  .bubble.answer .bubble-body{
+    background:var(--ink); color:#fff; border-top-right-radius:2px; max-width:88%;
+  }
+  .bubble.answer .bubble-label{ justify-content:flex-end; }
+
+  .eval-strip{
+    margin:8px 0 22px; padding:12px 14px; border-radius:var(--radius-md);
+    border:1px solid var(--line); background:var(--paper); font-size:13px;
+    animation:fadeInUp .35s ease both;
+  }
+  .eval-top{ display:flex; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
+  .eval-delta{ font-family:var(--font-mono); font-size:12px; }
+  .eval-delta.up{ color:var(--strong); }
+  .eval-delta.down{ color:var(--weak); }
+  .eval-delta.flat{ color:var(--muted); }
+  .eval-lists{ display:flex; gap:20px; flex-wrap:wrap; margin-bottom:6px; }
+  .eval-col{ flex:1; min-width:180px; }
+  .eval-col h4{ margin:0 0 4px; font-size:10.5px; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.04em; color:var(--muted); font-weight:500; }
+  .eval-col ul{ margin:0; padding-left:16px; }
+  .eval-col li{ margin-bottom:3px; color:var(--ink-soft); }
+  .eval-tip{ font-style:italic; color:var(--ink-soft); font-size:12.5px; border-top:1px solid var(--line); padding-top:8px; margin-top:8px; }
+
+  .thinking-line{
+    display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:12px; color:var(--muted);
+    padding:6px 0 18px;
+  }
+  .dot-pulse{ display:inline-flex; gap:3px; }
+  .dot-pulse span{ width:5px; height:5px; border-radius:50%; background:var(--muted); animation:dotpulse 1.1s infinite ease-in-out; }
+  .dot-pulse span:nth-child(2){ animation-delay:.15s; }
+  .dot-pulse span:nth-child(3){ animation-delay:.3s; }
+  @keyframes dotpulse{ 0%,80%,100%{ opacity:.25; } 40%{ opacity:1; } }
+
+  .error-banner{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    background:var(--weak-soft); border:1px solid var(--weak); color:var(--weak);
+    padding:11px 14px; border-radius:var(--radius-md); font-size:13px; margin-bottom:18px;
+  }
+  .error-banner button{
+    background:var(--weak); color:#fff; border:none; padding:6px 12px; border-radius:var(--radius-sm); font-size:12px; font-weight:600;
+  }
+
+  .ready-cta{
+    text-align:center; padding:24px; border:1px dashed var(--line-strong); border-radius:var(--radius-lg);
+    margin:12px 0 24px;
+  }
+  .ready-cta p{ margin:0 0 14px; font-size:13.5px; color:var(--ink-soft); }
+
+  /* Answer input dock */
+  .answer-dock{
+    border-top:1px solid var(--line);
+    background:var(--surface);
+    padding:14px 32px 18px;
+  }
+  .answer-dock-inner{ max-width:720px; margin:0 auto; }
+  textarea.answer-input{
+    width:100%; min-height:64px; max-height:200px; resize:vertical;
+    border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:12px 14px; font-size:14px; line-height:1.5; background:var(--paper); color:var(--ink);
+  }
+  textarea.answer-input:focus{ border-color:var(--accent); background:var(--surface); }
+  .answer-dock-actions{ display:flex; align-items:center; justify-content:space-between; margin-top:8px; }
+  .char-count{ font-family:var(--font-mono); font-size:11px; color:var(--muted); }
+  .hint-text{ font-family:var(--font-mono); font-size:11px; color:var(--muted); }
+
+  /* ---------- Report phase ---------- */
+  .report-stage{ flex:1; overflow-y:auto; padding:48px 24px 90px; display:flex; justify-content:center; }
+  .report-inner{ width:100%; max-width:840px; }
+  .report-header{ display:flex; align-items:center; gap:28px; margin-bottom:36px; flex-wrap:wrap; }
+  .ring-big{ position:relative; width:120px; height:120px; flex-shrink:0; }
+  .ring-big svg{ transform:rotate(-90deg); }
+  .ring-big .ring-num{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    flex-direction:column; font-family:var(--font-display); font-weight:700; font-size:26px;
+  }
+  .ring-big .ring-num span{ font-family:var(--font-mono); font-size:10px; font-weight:500; color:var(--muted); }
+
+  .report-title{ font-family:var(--font-display); font-size:26px; font-weight:600; margin:0 0 8px; }
+  .report-summary{ color:var(--ink-soft); font-size:14.5px; line-height:1.55; max-width:480px; }
+
+  .report-cols{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:32px; }
+  @media (max-width:760px){ .report-cols{ grid-template-columns:1fr; } }
+  .report-col{ border:1px solid var(--line); border-radius:var(--radius-lg); padding:18px; background:var(--surface); }
+  .report-col h3{
+    font-family:var(--font-mono); font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase;
+    margin:0 0 14px; display:flex; align-items:center; gap:8px;
+  }
+  .report-col.strong-col h3{ color:var(--strong); }
+  .report-col.weak-col h3{ color:var(--weak); }
+  .report-claim{ padding:10px 0; border-top:1px solid var(--line); }
+  .report-claim:first-of-type{ border-top:none; padding-top:0; }
+  .report-claim .rc-title{ font-weight:600; font-size:13.5px; margin-bottom:4px; }
+  .report-claim .rc-note{ font-size:13px; color:var(--ink-soft); line-height:1.5; }
+  .report-claim .rc-fix{ font-size:12.5px; color:var(--accent); margin-top:5px; }
+
+  .rec-block{ border:1px solid var(--line); border-radius:var(--radius-lg); padding:20px; background:var(--surface); margin-bottom:28px; }
+  .rec-block h3{ font-family:var(--font-mono); font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase; margin:0 0 14px; color:var(--ink-soft); }
+  .rec-item{ display:flex; gap:12px; margin-bottom:12px; align-items:flex-start; }
+  .rec-num{
+    font-family:var(--font-mono); font-size:11px; color:var(--accent); border:1px solid var(--accent); border-radius:50%;
+    width:20px; height:20px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
+  }
+  .rec-item p{ margin:0; font-size:13.5px; line-height:1.5; color:var(--ink); }
+
+  .report-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+
+  /* Calibration popover */
+  .popover{
+    position:absolute; top:52px; right:24px; background:var(--surface); border:1px solid var(--line);
+    border-radius:var(--radius-md); box-shadow:var(--shadow-md); padding:16px; width:260px; z-index:60;
+  }
+  .popover label{ display:block; font-size:11.5px; font-family:var(--font-mono); color:var(--muted); margin:10px 0 4px; }
+  .popover label:first-child{ margin-top:0; }
+  .popover select{
+    width:100%; padding:7px 8px; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--paper); font-size:13px;
+  }
+  .popover-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:14px; }
+
+  .mobile-docket-toggle{ display:none; }
+
+  @media (max-width:880px){
+    .interview-shell{ grid-template-columns:1fr; }
+    aside.docket{
+      display:none;
+      border-right:none; border-bottom:1px solid var(--line);
+      max-height:40vh;
+    }
+    aside.docket.open{ display:block; }
+    .mobile-docket-toggle{ display:inline-flex; }
+    .transcript, .answer-dock-inner, .transcript-inner{ padding-left:16px; padding-right:16px; }
+    .answer-dock{ padding-left:16px; padding-right:16px; }
+    header.topbar{ padding:12px 14px; flex-wrap:wrap; }
+    .upload-title{ font-size:26px; }
+  }
+
+  @media print{
+    header.topbar, .answer-dock, aside.docket, .report-actions, .mobile-docket-toggle{ display:none !important; }
+    body{ background:#fff; }
+    .report-stage{ padding:0; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ================= Constants ================= */
+  var MODEL = "claude-sonnet-4-6";
+  var ACTIVE_KEY = "dye_active_v1";
+  var HISTORY_INDEX_KEY = "dye_history_index_v1";
+  var SESSION_PREFIX = "dye_session_v1_";
+  var MAX_RESUME_CHARS = 6000;
+  var MAX_PROBES_PER_CLAIM = 3;
+
+  /* ================= State ================= */
+  var state = null;
+  var dockOpenMobile = false;
+  var calibrationOpen = false;
+
+  function freshState(){
+    return {
+      id: uid("case"),
+      createdAt: Date.now(),
+      resumeText: "",
+      settings: { level: "entry", mode: "mixed", difficulty: "balanced" },
+      claims: [],
+      transcript: [],
+      phase: "upload", // upload | extracting | interview | report
+      turnCount: 0,
+      currentClaimId: null,
+      report: null,
+      loading: null, // {type, label}
+      pendingRetry: null // {label, fn}
+    };
+  }
+
+  function uid(prefix){
+    return (prefix||"id") + "_" + Math.random().toString(36).slice(2,9) + Date.now().toString(36).slice(-4);
+  }
+
+  function saveActive(){
+    try{ localStorage.setItem(ACTIVE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+  function loadActive(){
+    try{
+      var raw = localStorage.getItem(ACTIVE_KEY);
+      if(!raw) return false;
+      var parsed = JSON.parse(raw);
+      if(parsed && parsed.phase && parsed.phase !== "upload"){ state = parsed; return true; }
+      return false;
+    }catch(e){ return false; }
+  }
+
+  function loadHistoryIndex(){
+    try{ return JSON.parse(localStorage.getItem(HISTORY_INDEX_KEY) || "[]"); }catch(e){ return []; }
+  }
+  function saveHistoryIndex(list){
+    try{ localStorage.setItem(HISTORY_INDEX_KEY, JSON.stringify(list)); }catch(e){}
+  }
+  function archiveCurrentSession(){
+    if(!state || state.phase === "upload" || state.claims.length === 0) return;
+    try{
+      localStorage.setItem(SESSION_PREFIX + state.id, JSON.stringify(state));
+      var idx = loadHistoryIndex().filter(function(h){ return h.id !== state.id; });
+      var avg = avgConfidence();
+      idx.unshift({
+        id: state.id,
+        date: state.createdAt,
+        title: guessTitle(),
+        avgConfidence: Math.round(avg),
+        claimCount: state.claims.length,
+        phase: state.phase
+      });
+      saveHistoryIndex(idx.slice(0,20));
+    }catch(e){}
+  }
+  function guessTitle(){
+    var firstClaim = state.claims[0];
+    if(firstClaim) return firstClaim.category + " focus \u00b7 " + state.claims.length + " claims";
+    return "Interview session";
+  }
+  function loadSessionFromHistory(id){
+    try{
+      var raw = localStorage.getItem(SESSION_PREFIX + id);
+      if(!raw) return false;
+      state = JSON.parse(raw);
+      saveActive();
+      render();
+      return true;
+    }catch(e){ return false; }
+  }
+  function deleteHistoryItem(id){
+    try{
+      localStorage.removeItem(SESSION_PREFIX + id);
+      saveHistoryIndex(loadHistoryIndex().filter(function(h){ return h.id !== id; }));
+    }catch(e){}
+    render();
+  }
+
+  /* ================= Derived helpers ================= */
+  function avgConfidence(){
+    if(!state.claims.length) return 0;
+    var sum = state.claims.reduce(function(a,c){ return a + c.confidence; }, 0);
+    return sum / state.claims.length;
+  }
+  function coveredCount(){
+    return state.claims.filter(function(c){ return c.probeCount > 0; }).length;
+  }
+  function statusOf(conf){
+    if(conf < 35) return "weak";
+    if(conf < 70) return "moderate";
+    return "strong";
+  }
+  function statusLabel(conf){
+    if(conf < 35) return "Undefended";
+    if(conf < 70) return "Developing";
+    return "Well Defended";
+  }
+  function exhibitLabel(i){
+    if(i < 26) return "Exhibit " + String.fromCharCode(65+i);
+    return "Exhibit " + (i+1);
+  }
+  function fmtTime(ts){
+    var d = new Date(ts);
+    var h = d.getHours(); var m = d.getMinutes();
+    var ap = h >= 12 ? "PM" : "AM";
+    h = h % 12; if(h===0) h = 12;
+    return (h < 10 ? "0"+h : h) + ":" + (m<10?"0"+m:m) + " " + ap;
+  }
+
+  /* ================= API layer ================= */
+  function stripFences(text){
+    var t = text.trim();
+    t = t.replace(/^```json\s*/i, "").replace(/^```\s*/, "").replace(/```\s*$/, "");
+    return t.trim();
+  }
+  function parseJSONLoose(text){
+    var t = stripFences(text);
+    try{ return JSON.parse(t); }catch(e){}
+    var arrMatch = t.match(/\[[\s\S]*\]/);
+    if(arrMatch){ try{ return JSON.parse(arrMatch[0]); }catch(e){} }
+    var objMatch = t.match(/\{[\s\S]*\}/);
+    if(objMatch){ try{ return JSON.parse(objMatch[0]); }catch(e){} }
+    throw new Error("Could not parse model response as JSON");
+  }
+
+  function callClaude(systemPrompt, userContent){
+    return fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: "user", content: userContent }]
+      })
+    }).then(function(res){
+      if(!res.ok){
+        var err = new Error("API_ERROR_" + res.status);
+        err.status = res.status;
+        throw err;
+      }
+      return res.json();
+    }).then(function(data){
+      var text = (data.content || [])
+        .filter(function(b){ return b.type === "text"; })
+        .map(function(b){ return b.text; })
+        .join("\n");
+      return text;
+    });
+  }
+
+  function friendlyErrorMessage(err){
+    if(err && err.status === 429) return "The interviewer hit a rate limit. Give it a moment and retry.";
+    if(err && err.status >= 500) return "The interviewer's connection dropped. Retry when ready.";
+    return "Something interrupted the interview. Retry to continue.";
+  }
+
+  /* ================= Claim extraction ================= */
+  function extractClaims(){
+    state.phase = "extracting";
+    state.loading = { type: "extract" };
+    state.pendingRetry = null;
+    render();
+
+    var text = state.resumeText.slice(0, MAX_RESUME_CHARS);
+    var system = "You are a skeptical interviewer building a claims docket from a candidate's resume text. " +
+      "Extract 5 to 8 distinct, individually defendable claims (achievements, responsibilities, skills, or metrics). " +
+      "For each claim return: id (c1, c2, ...), category (one of: Leadership, Technical, Impact, Collaboration, Ownership, Growth), " +
+      "claimText (a short paraphrase under 15 words, in the candidate's voice), riskLevel (one of: vague, unquantified, buzzword, solid), " +
+      "riskNote (why it needs defending, under 12 words). " +
+      "Return ONLY a valid JSON array of these objects. No markdown fences, no commentary, no surrounding text.";
+
+    callClaude(system, "Resume text:\n\n" + text)
+      .then(function(raw){
+        var parsed = parseJSONLoose(raw);
+        if(!Array.isArray(parsed) || parsed.length === 0) throw new Error("Empty claims list");
+        state.claims = parsed.slice(0,8).map(function(c, i){
+          var risk = (c.riskLevel || "vague").toLowerCase();
+          var baseConf = risk === "solid" ? 38 : risk === "unquantified" ? 24 : risk === "buzzword" ? 16 : 18;
+          return {
+            id: c.id || ("c" + (i+1)),
+            text: c.claimText || c.text || "Unlabeled claim",
+            category: c.category || "General",
+            risk: risk,
+            riskNote: c.riskNote || "",
+            confidence: baseConf,
+            probeCount: 0,
+            exchanges: []
+          };
+        });
+        state.loading = null;
+        state.phase = "interview";
+        saveActive();
+        render();
+        askNextQuestion();
+      })
+      .catch(function(err){
+        state.loading = null;
+        state.pendingRetry = { label: "extraction", fn: extractClaims };
+        state.phase = "upload";
+        render();
+      });
+  }
+
+  /* ================= Question generation ================= */
+  function pickTargetClaim(){
+    var eligible = state.claims.filter(function(c){ return c.probeCount < MAX_PROBES_PER_CLAIM; });
+    var pool = eligible.length ? eligible : state.claims.filter(function(c){ return c.confidence < 80; });
+    if(!pool.length) return null;
+    pool = pool.slice().sort(function(a,b){
+      if(a.confidence !== b.confidence) return a.confidence - b.confidence;
+      return a.probeCount - b.probeCount;
+    });
+    return pool[0];
+  }
+
+  function levelDescriptor(){
+    var lv = { entry:"an entry-level candidate (0-2 years experience)", mid:"a mid-level individual contributor (3-7 years)", senior:"a senior specialist (7+ years)", lead:"a candidate interviewing for a leadership/management role", exec:"a candidate interviewing at executive/founder level" }[state.settings.level] || "an early-career candidate";
+    var mode = { mixed:"Rotate naturally across behavioral, technical, and light case-style questions.", behavioral:"Focus on behavioral, STAR-style questions.", technical:"Focus on technical, hands-on depth questions.", case:"Favor case-study and problem-solving style questions.", executive:"Favor strategic, stakeholder-facing, executive-panel style questions." }[state.settings.mode] || "Rotate across question types.";
+    var diff = { supportive:"Be a supportive coach: probing but gentle.", balanced:"Be a realistic, balanced interviewer: fair but genuinely skeptical.", hard:"Be a hard-nosed skeptic: assume claims are exaggerated until proven.", brutal:"Be a worst-case hostile interviewer: aggressive and highly critical." }[state.settings.difficulty] || "Be balanced and realistic.";
+    return "You are interviewing " + lv + ". " + mode + " " + diff;
+  }
+
+  function askNextQuestion(){
+    var claim = pickTargetClaim();
+    if(!claim){ render(); return; }
+    state.currentClaimId = claim.id;
+    state.loading = { type: "question" };
+    state.pendingRetry = null;
+    render();
+
+    var recent = state.transcript.slice(-6).map(function(t){
+      return t.kind + ": " + (t.text || "").slice(0,200);
+    }).join("\n");
+
+    var docketSummary = state.claims.map(function(c){
+      return c.id + " [" + c.category + ", risk=" + c.risk + ", confidence=" + c.confidence + ", probes=" + c.probeCount + "]: " + c.text;
+    }).join("\n");
+
+    var system = levelDescriptor() + " " +
+      "Given the claims docket and recent transcript, ask ONE sharp, specific follow-up question targeting claim " + claim.id + " (\"" + claim.text + "\"). " +
+      "Escalate specificity as turn number increases (current turn: " + (state.turnCount+1) + "). Do not repeat a question already asked about this claim. " +
+      "Vary the probe type across the interview. " +
+      "Return ONLY valid JSON: {\"question\": string, \"targetClaimId\": \"" + claim.id + "\", \"probeType\": one of [specificity, metric, ownership, technical, counterfactual, behavioral], \"difficulty\": integer 1-5}. No markdown, no commentary.";
+
+    var userMsg = "Claims docket:\n" + docketSummary + "\n\nRecent transcript:\n" + (recent || "(none yet)");
+
+    callClaude(system, userMsg)
+      .then(function(raw){
+        var parsed = parseJSONLoose(raw);
+        state.loading = null;
+        state.turnCount += 1;
+        state.transcript.push({
+          id: uid("t"),
+          kind: "question",
+          claimId: claim.id,
+          text: parsed.question,
+          probeType: parsed.probeType || "specificity",
+          ts: Date.now()
+        });
+        saveActive();
+        render();
+        focusAnswerInput();
+      })
+      .catch(function(err){
+        state.loading = null;
+        state.pendingRetry = { label: "next question", fn: askNextQuestion };
+        render();
+      });
+  }
+
+  /* ================= Answer submission + evaluation ================= */
+  function handleSubmitAnswer(){
+    var ta = document.getElementById("answerInput");
+    if(!ta) return;
+    var val = ta.value.trim();
+    if(!val || state.loading) return;
+
+    var lastQ = null;
+    for(var i = state.transcript.length - 1; i >= 0; i--){
+      if(state.transcript[i].kind === "question"){ lastQ = state.transcript[i]; break; }
+    }
+    if(!lastQ) return;
+
+    state.transcript.push({ id: uid("t"), kind: "answer", claimId: lastQ.claimId, text: val, ts: Date.now() });
+    ta.value = "";
+    saveActive();
+    render();
+    evaluateAnswer(lastQ, val);
+  }
+
+  function evaluateAnswer(question, answer){
+    var claim = state.claims.find(function(c){ return c.id === question.claimId; });
+    if(!claim){ askNextQuestion(); return; }
+
+    state.loading = { type: "eval" };
+    state.pendingRetry = null;
+    render();
+
+    var system = levelDescriptor() + " " +
+      "Evaluate the candidate's answer honestly but constructively. Given the claim, the question asked, and the answer, " +
+      "assess how well-defended this specific claim now is, considering its prior confidence of " + claim.confidence + ". " +
+      "Return ONLY valid JSON: {\"confidence\": integer 0-100 (new absolute confidence for this claim), " +
+      "\"verdict\": one of [weak, developing, solid, strong], \"strengths\": array of up to 2 short strings, " +
+      "\"gaps\": array of up to 2 short strings, \"coachingTip\": string under 20 words, \"needsFollowUp\": boolean}. " +
+      "No markdown, no commentary.";
+
+    var userMsg = "Claim (" + claim.category + "): " + claim.text +
+      "\nQuestion asked: " + question.text +
+      "\nCandidate's answer: " + answer;
+
+    callClaude(system, userMsg)
+      .then(function(raw){
+        var parsed = parseJSONLoose(raw);
+        state.loading = null;
+        var newConf = Math.max(0, Math.min(100, Math.round(parsed.confidence)));
+        var delta = newConf - claim.confidence;
+        claim.confidence = newConf;
+        claim.probeCount += 1;
+        claim.exchanges.push({ questionId: question.id, verdict: parsed.verdict, delta: delta });
+
+        state.transcript.push({
+          id: uid("t"),
+          kind: "eval",
+          claimId: claim.id,
+          verdict: parsed.verdict || statusLabel(newConf),
+          delta: delta,
+          strengths: parsed.strengths || [],
+          gaps: parsed.gaps || [],
+          coachingTip: parsed.coachingTip || "",
+          ts: Date.now()
+        });
+
+        saveActive();
+        render();
+
+        window.setTimeout(function(){
+          askNextQuestion();
+        }, 550);
+      })
+      .catch(function(err){
+        state.loading = null;
+        state.pendingRetry = { label: "evaluation", fn: function(){ evaluateAnswer(question, answer); } };
+        render();
+      });
+  }
+
+  /* ================= Report generation ================= */
+  function generateReport(){
+    state.loading = { type: "report" };
+    state.pendingRetry = null;
+    state.phase = "report";
+    render();
+
+    var docketSummary = state.claims.map(function(c){
+      return c.id + " [" + c.category + ", confidence=" + c.confidence + ", probes=" + c.probeCount + "]: " + c.text;
+    }).join("\n");
+
+    var system = "Generate a concise, honest Defense Report synthesizing this mock interview for " + levelDescriptorShort() + ". " +
+      "Return ONLY valid JSON: {\"overallReadiness\": integer 0-100, \"summary\": string under 40 words, " +
+      "\"strongClaims\": array of up to 4 {\"id\": string, \"note\": string under 20 words}, " +
+      "\"weakClaims\": array of up to 4 {\"id\": string, \"note\": string under 20 words, \"fix\": string under 20 words}, " +
+      "\"topRecommendations\": array of exactly 3 short actionable strings}. No markdown, no commentary.";
+
+    callClaude(system, "Final claims docket:\n" + docketSummary)
+      .then(function(raw){
+        var parsed = parseJSONLoose(raw);
+        state.loading = null;
+        state.report = parsed;
+        saveActive();
+        archiveCurrentSession();
+        render();
+      })
+      .catch(function(err){
+        state.loading = null;
+        state.pendingRetry = { label: "report", fn: generateReport };
+        render();
+      });
+  }
+  function levelDescriptorShort(){
+    return { entry:"an entry-level candidate", mid:"a mid-level candidate", senior:"a senior specialist", lead:"a leadership candidate", exec:"an executive candidate" }[state.settings.level] || "a candidate";
+  }
+
+  /* ================= Export / print ================= */
+  function downloadText(filename, content){
+    var blob = new Blob([content], { type: "text/plain" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function buildExportMarkdown(){
+    var lines = [];
+    lines.push("# Defense Report");
+    lines.push("");
+    lines.push("Session: " + state.id + " \u00b7 " + new Date(state.createdAt).toLocaleString());
+    lines.push("");
+    if(state.report){
+      lines.push("## Overall readiness: " + state.report.overallReadiness + "/100");
+      lines.push(state.report.summary || "");
+      lines.push("");
+      lines.push("### Well defended");
+      (state.report.strongClaims||[]).forEach(function(c){
+        lines.push("- " + labelForClaim(c.id) + ": " + c.note);
+      });
+      lines.push("");
+      lines.push("### Needs work");
+      (state.report.weakClaims||[]).forEach(function(c){
+        lines.push("- " + labelForClaim(c.id) + ": " + c.note + " \u2014 Fix: " + c.fix);
+      });
+      lines.push("");
+      lines.push("### Recommendations");
+      (state.report.topRecommendations||[]).forEach(function(r,i){
+        lines.push((i+1) + ". " + r);
+      });
+      lines.push("");
+    }
+    lines.push("## Claims docket");
+    state.claims.forEach(function(c,i){
+      lines.push("");
+      lines.push("### " + exhibitLabel(i) + " (" + c.category + ") \u2014 " + statusLabel(c.confidence) + " (" + c.confidence + "%)");
+      lines.push(c.text);
+    });
+    lines.push("");
+    lines.push("## Transcript");
+    state.transcript.forEach(function(t){
+      if(t.kind === "question") lines.push("\n**Interviewer:** " + t.text);
+      if(t.kind === "answer") lines.push("\n**You:** " + t.text);
+      if(t.kind === "eval") lines.push("\n_" + t.verdict + " \u00b7 " + t.coachingTip + "_");
+    });
+    return lines.join("\n");
+  }
+  function labelForClaim(id){
+    var idx = state.claims.findIndex(function(c){ return c.id === id; });
+    return idx >= 0 ? exhibitLabel(idx) : id;
+  }
+
+  /* ================= Rendering ================= */
+  var appEl;
+
+  function render(){
+    appEl = document.getElementById("app");
+    var html = renderHeader();
+    if(state.phase === "upload") html += renderUpload();
+    else if(state.phase === "extracting") html += renderExtracting();
+    else if(state.phase === "interview") html += renderInterview();
+    else if(state.phase === "report") html += renderReport();
+    appEl.innerHTML = html;
+    wireEvents();
+    if(state.phase === "interview"){
+      scrollTranscriptToBottom();
+    }
+  }
+
+  function ringSvg(pct, size, stroke, color){
+    var r = (size - stroke) / 2;
+    var c = 2 * Math.PI * r;
+    var offset = c - (pct/100) * c;
+    return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">' +
+      '<circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="var(--neutral-soft)" stroke-width="'+stroke+'"/>' +
+      '<circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="'+stroke+'" stroke-linecap="round" ' +
+      'stroke-dasharray="'+c+'" stroke-dashoffset="'+offset+'" style="transition:stroke-dashoffset .6s ease;"/></svg>';
+  }
+
+  function renderHeader(){
+    var hasCase = state.phase !== "upload";
+    var avg = Math.round(avgConfidence());
+    var color = avg < 35 ? "var(--weak)" : avg < 70 ? "var(--moderate)" : "var(--strong)";
+    var right = "";
+    if(hasCase && state.claims.length){
+      right += '<div class="progress-ring-wrap">' +
+        '<div style="width:34px;height:34px;">' + ringSvg(avg, 34, 4, color) + '</div>' +
+        '<div class="progress-ring-label"><b>' + avg + '%</b>' + coveredCount() + '/' + state.claims.length + ' examined</div>' +
+        '</div>';
+    }
+    var calChip = '<div class="chip" style="position:relative;">' +
+      cap(state.settings.level) + ' \u00b7 ' + cap(state.settings.mode) + ' \u00b7 ' + cap(state.settings.difficulty) +
+      '<button class="link-btn" id="calToggle">edit</button>' +
+      (calibrationOpen ? renderCalibrationPopover() : "") +
+      '</div>';
+
+    var buttons = "";
+    if(state.phase === "interview"){
+      buttons += '<button class="icon-btn mobile-docket-toggle" id="mobileDocketBtn">Docket</button>';
+      buttons += '<button class="icon-btn" id="finishBtn">Finish &amp; Get Report</button>';
+    }
+    if(state.phase === "report"){
+      buttons += '<button class="icon-btn" id="printBtn">Print</button>';
+      buttons += '<button class="icon-btn" id="exportBtn">Export</button>';
+    }
+    if(hasCase){
+      buttons += '<button class="icon-btn primary" id="newCaseBtn">New Case</button>';
+    }
+
+    return '<header class="topbar">' +
+      '<div class="brand"><span class="mark">Defend Your Experience</span>' + (hasCase ? '<span class="case-id">' + state.id + '</span>' : '') + '</div>' +
+      '<div class="topbar-right">' + calChip + right + buttons + '</div>' +
+      '</header>';
+  }
+
+  function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  function renderCalibrationPopover(){
+    var s = state.settings;
+    function opts(map, current){
+      return Object.keys(map).map(function(k){
+        return '<option value="'+k+'"' + (k===current?' selected':'') + '>' + map[k] + '</option>';
+      }).join("");
+    }
+    var levels = {entry:"Entry-level (0-2y)", mid:"Mid-level (3-7y)", senior:"Senior IC (7y+)", lead:"Management/lead", exec:"Executive/founder"};
+    var modes = {mixed:"Mixed", behavioral:"Behavioral", technical:"Technical", case:"Case study", executive:"Executive panel"};
+    var diffs = {supportive:"Supportive coach", balanced:"Balanced & realistic", hard:"Hard-nosed skeptic", brutal:"Brutal / worst-case"};
+    return '<div class="popover" id="calPopover">' +
+      '<label>Seniority level</label><select id="calLevel">' + opts(levels, s.level) + '</select>' +
+      '<label>Interview mode</label><select id="calMode">' + opts(modes, s.mode) + '</select>' +
+      '<label>Difficulty</label><select id="calDiff">' + opts(diffs, s.difficulty) + '</select>' +
+      '<div class="popover-actions"><button class="icon-btn" id="calClose">Close</button><button class="icon-btn primary" id="calSave">Save</button></div>' +
+      '</div>';
+  }
+
+  function renderUpload(){
+    var history = loadHistoryIndex();
+    var hasFile = !!window.__pendingFile;
+    var retryBanner = state.pendingRetry ? renderErrorBanner() : "";
+    return '<main class="stage"><div class="upload-stage"><div class="upload-inner">' +
+      retryBanner +
+      '<div class="upload-eyebrow">Case intake</div>' +
+      '<h1 class="upload-title">Open a case on yourself.</h1>' +
+      '<p class="upload-sub">This isn\u2019t a resume reviewer. It\u2019s a cross-examination. Every line becomes an <strong>exhibit</strong> \u2014 ' +
+      'and you\u2019ll defend each one, out loud, under real follow-up pressure, until you can back it up without flinching.</p>' +
+
+      '<div class="dropzone" id="dropzone">' +
+        '<p class="dropzone-title">Drop your resume here</p>' +
+        '<p class="dropzone-sub">.txt or .md files read automatically \u00b7 PDF/DOCX? Paste the text below instead</p>' +
+        '<button class="icon-btn" id="browseBtn">Browse files</button>' +
+        '<input type="file" id="fileInput" accept=".txt,.md,.markdown" />' +
+      '</div>' +
+
+      '<div class="divider-row">or paste your experience</div>' +
+      '<textarea class="paste-area" id="pasteArea" placeholder="Paste your resume, LinkedIn summary, project write-up, or bio here...">' + (state.resumeText || "") + '</textarea>' +
+
+      '<div class="upload-actions">' +
+        '<span class="file-badge" id="fileBadge">' + (state.resumeText ? (state.resumeText.length + " characters loaded") : "Nothing loaded yet") + '</span>' +
+        '<button class="begin-btn" id="beginBtn"' + (state.resumeText.trim() ? "" : " disabled") + '>Begin interview \u2192</button>' +
+      '</div>' +
+
+      (history.length ? renderHistoryBlock(history) : "") +
+      '</div></div></main>';
+  }
+
+  function renderHistoryBlock(history){
+    var items = history.map(function(h){
+      return '<div class="history-item">' +
+        '<div class="h-left"><span class="h-title">' + escapeHtml(h.title) + '</span>' +
+        '<span class="h-meta">' + new Date(h.date).toLocaleDateString() + ' \u00b7 ' + h.claimCount + ' claims \u00b7 avg ' + h.avgConfidence + '% confidence' + (h.phase==='report' ? ' \u00b7 report generated' : '') + '</span></div>' +
+        '<div style="display:flex;gap:6px;"><button data-open="' + h.id + '">Open</button><button data-del="' + h.id + '">Delete</button></div>' +
+        '</div>';
+    }).join("");
+    return '<div class="history-block"><h2>Past cases</h2>' + items + '</div>';
+  }
+
+  function renderErrorBanner(){
+    if(!state.pendingRetry) return "";
+    return '<div class="error-banner"><span>Couldn\u2019t complete the ' + state.pendingRetry.label + '. Your progress is saved.</span>' +
+      '<button id="retryBtn">Retry</button></div>';
+  }
+
+  function renderExtracting(){
+    var rows = "";
+    for(var i=0;i<6;i++){ rows += '<div class="skeleton-row" style="width:' + (60 + Math.random()*35) + '%;"></div>'; }
+    return '<main class="stage"><div class="upload-stage"><div class="upload-inner">' +
+      '<div class="upload-eyebrow">Building the docket</div>' +
+      '<h1 class="upload-title">Reading your file...</h1>' +
+      '<p class="upload-sub">Pulling out every claim worth defending \u2014 achievements, metrics, responsibilities \u2014 and flagging which ones look shaky.</p>' +
+      '<div style="border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px;background:var(--surface);">' + rows + '</div>' +
+      '</div></div></main>';
+  }
+
+  function renderInterview(){
+    var docket = '<aside class="docket' + (dockOpenMobile ? ' open' : '') + '"><div class="docket-header"><h2>Docket</h2>' +
+      '<span class="docket-count">' + state.claims.length + ' exhibits</span></div>' +
+      state.claims.map(function(c, i){
+        var st = statusOf(c.confidence);
+        var active = c.id === state.currentClaimId ? " is-active" : "";
+        return '<div class="claim-card' + active + '">' +
+          '<div class="claim-card-top"><span class="exhibit-tag">' + exhibitLabel(i) + '</span>' +
+          '<span class="status-badge status-' + st + '">' + statusLabel(c.confidence) + '</span></div>' +
+          '<p class="claim-text">' + escapeHtml(c.text) + '</p>' +
+          '<div class="claim-meta-row"><span class="claim-category">' + escapeHtml(c.category) + '</span>' +
+          '<span class="claim-probes">' + c.probeCount + ' probe' + (c.probeCount===1?"":"s") + '</span></div>' +
+          '<div class="confidence-bar"><div class="confidence-fill fill-' + st + '" style="width:' + c.confidence + '%;"></div></div>' +
+          '</div>';
+      }).join("") +
+      '</aside>';
+
+    var target = pickTargetClaim();
+    var allCovered = !target;
+
+    var bubbles = state.transcript.map(function(t){ return renderTranscriptEntry(t); }).join("");
+
+    var thinking = "";
+    if(state.loading && state.loading.type === "question"){
+      thinking = '<div class="thinking-line">The interviewer is preparing the next question<span class="dot-pulse"><span></span><span></span><span></span></span></div>';
+    }
+    if(state.loading && state.loading.type === "eval"){
+      thinking = '<div class="thinking-line">Weighing your answer<span class="dot-pulse"><span></span><span></span><span></span></span></div>';
+    }
+
+    var retryBanner = state.pendingRetry ? renderErrorBanner() : "";
+
+    var readyBlock = "";
+    if(allCovered && !state.loading){
+      readyBlock = '<div class="ready-cta"><p>Every exhibit has been examined at least once. You can keep probing the weaker ones, or close the case and get your Defense Report.</p>' +
+        '<button class="icon-btn" id="keepGoingBtn" style="margin-right:8px;">Probe further</button>' +
+        '<button class="icon-btn primary" id="reportBtn">Generate Defense Report</button></div>';
+    }
+
+    var dockingDisabled = !!state.loading || allCovered;
+
+    return '<main class="stage"><div class="interview-shell">' + docket +
+      '<div class="interview-main">' +
+        '<div class="transcript" id="transcriptEl"><div class="transcript-inner">' +
+          (state.transcript.length === 0 ? '<p class="intro-note">The interview begins the moment the first question loads.</p>' : "") +
+          retryBanner +
+          bubbles +
+          thinking +
+          readyBlock +
+        '</div></div>' +
+        '<div class="answer-dock"><div class="answer-dock-inner">' +
+          '<textarea class="answer-input" id="answerInput" placeholder="Type your answer... be specific: what you actually did, your role, the outcome."' + (dockingDisabled ? " disabled" : "") + '></textarea>' +
+          '<div class="answer-dock-actions">' +
+            '<span class="hint-text">\u2318/Ctrl + Enter to submit</span>' +
+            '<button class="icon-btn primary" id="submitAnswerBtn"' + (dockingDisabled ? " disabled" : "") + '>Submit answer</button>' +
+          '</div>' +
+        '</div></div>' +
+      '</div>' +
+    '</div></main>';
+  }
+
+  function renderTranscriptEntry(t){
+    if(t.kind === "question"){
+      return '<div class="bubble question"><div class="bubble-label">' +
+        '<span class="who">Interviewer</span><span class="probe-type">' + escapeHtml(t.probeType) + '</span>' +
+        '<span class="ts">' + fmtTime(t.ts) + '</span></div>' +
+        '<div class="bubble-body">' + escapeHtml(t.text) + '</div></div>';
+    }
+    if(t.kind === "answer"){
+      return '<div class="bubble answer"><div class="bubble-label"><span class="ts">' + fmtTime(t.ts) + '</span><span class="who">You</span></div>' +
+        '<div class="bubble-body">' + escapeHtml(t.text) + '</div></div>';
+    }
+    if(t.kind === "eval"){
+      var deltaClass = t.delta > 0 ? "up" : t.delta < 0 ? "down" : "flat";
+      var deltaSign = t.delta > 0 ? "+" : "";
+      var strengths = (t.strengths||[]).map(function(s){ return "<li>" + escapeHtml(s) + "</li>"; }).join("");
+      var gaps = (t.gaps||[]).map(function(s){ return "<li>" + escapeHtml(s) + "</li>"; }).join("");
+      return '<div class="eval-strip"><div class="eval-top">' +
+        '<span class="status-badge status-' + verdictClass(t.verdict) + '">' + cap(t.verdict) + '</span>' +
+        '<span class="eval-delta ' + deltaClass + '">' + deltaSign + t.delta + ' confidence</span></div>' +
+        '<div class="eval-lists">' +
+          (strengths ? '<div class="eval-col"><h4>Landed</h4><ul>' + strengths + '</ul></div>' : "") +
+          (gaps ? '<div class="eval-col"><h4>Gaps</h4><ul>' + gaps + '</ul></div>' : "") +
+        '</div>' +
+        (t.coachingTip ? '<div class="eval-tip">' + escapeHtml(t.coachingTip) + '</div>' : "") +
+      '</div>';
+    }
+    return "";
+  }
+  function verdictClass(v){
+    if(v === "strong" || v === "solid") return "strong";
+    if(v === "developing") return "moderate";
+    return "weak";
+  }
+
+  function renderReport(){
+    if(state.loading && state.loading.type === "report"){
+      return '<main class="stage"><div class="report-stage"><div class="report-inner">' +
+        '<div class="upload-eyebrow">Closing the case</div>' +
+        '<h1 class="upload-title">Compiling your Defense Report...</h1>' +
+        '<div style="border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px;background:var(--surface);">' +
+        '<div class="skeleton-row" style="width:80%;"></div><div class="skeleton-row" style="width:65%;"></div><div class="skeleton-row" style="width:72%;"></div>' +
+        '</div></div></div></main>';
+    }
+    if(!state.report){
+      return '<main class="stage"><div class="report-stage"><div class="report-inner">' +
+        (state.pendingRetry ? renderErrorBanner() : "<p>No report yet.</p>") +
+      '</div></div></main>';
+    }
+    var r = state.report;
+    var color = r.overallReadiness < 35 ? "var(--weak)" : r.overallReadiness < 70 ? "var(--moderate)" : "var(--strong)";
+
+    var strongItems = (r.strongClaims||[]).map(function(c){
+      return '<div class="report-claim"><div class="rc-title">' + labelForClaim(c.id) + '</div><div class="rc-note">' + escapeHtml(c.note) + '</div></div>';
+    }).join("") || '<p class="report-claim rc-note">Nothing scored strong yet \u2014 keep practicing.</p>';
+
+    var weakItems = (r.weakClaims||[]).map(function(c){
+      return '<div class="report-claim"><div class="rc-title">' + labelForClaim(c.id) + '</div><div class="rc-note">' + escapeHtml(c.note) + '</div>' +
+        (c.fix ? '<div class="rc-fix">Fix: ' + escapeHtml(c.fix) + '</div>' : "") + '</div>';
+    }).join("") || '<p class="report-claim rc-note">No major weak spots detected.</p>';
+
+    var recs = (r.topRecommendations||[]).map(function(rec, i){
+      return '<div class="rec-item"><span class="rec-num">' + (i+1) + '</span><p>' + escapeHtml(rec) + '</p></div>';
+    }).join("");
+
+    return '<main class="stage"><div class="report-stage"><div class="report-inner">' +
+      '<div class="upload-eyebrow">Case closed</div>' +
+      '<div class="report-header">' +
+        '<div class="ring-big">' + ringSvg(r.overallReadiness, 120, 10, color) +
+        '<div class="ring-num">' + r.overallReadiness + '<span>READY</span></div></div>' +
+        '<div><h1 class="report-title">Defense Report</h1><p class="report-summary">' + escapeHtml(r.summary || "") + '</p></div>' +
+      '</div>' +
+      '<div class="report-cols">' +
+        '<div class="report-col strong-col"><h3>Well defended</h3>' + strongItems + '</div>' +
+        '<div class="report-col weak-col"><h3>Needs work</h3>' + weakItems + '</div>' +
+      '</div>' +
+      '<div class="rec-block"><h3>Before the real interview</h3>' + recs + '</div>' +
+      '<div class="report-actions">' +
+        '<button class="icon-btn primary" id="exportBtn2">Export report + transcript</button>' +
+        '<button class="icon-btn" id="printBtn2">Print</button>' +
+        '<button class="icon-btn" id="reviewBtn">Review transcript</button>' +
+      '</div>' +
+      '</div></div></main>';
+  }
+
+  function escapeHtml(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(m){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m];
+    });
+  }
+
+  function scrollTranscriptToBottom(){
+    var el = document.getElementById("transcriptEl");
+    if(el) el.scrollTop = el.scrollHeight;
+  }
+  function focusAnswerInput(){
+    var el = document.getElementById("answerInput");
+    if(el) el.focus();
+  }
+
+  /* ================= Event wiring ================= */
+  function wireEvents(){
+    // Calibration
+    var calToggle = document.getElementById("calToggle");
+    if(calToggle){
+      calToggle.addEventListener("click", function(e){
+        e.stopPropagation();
+        calibrationOpen = !calibrationOpen;
+        render();
+      });
+    }
+    var calClose = document.getElementById("calClose");
+    if(calClose){ calClose.addEventListener("click", function(){ calibrationOpen = false; render(); }); }
+    var calSave = document.getElementById("calSave");
+    if(calSave){
+      calSave.addEventListener("click", function(){
+        state.settings.level = document.getElementById("calLevel").value;
+        state.settings.mode = document.getElementById("calMode").value;
+        state.settings.difficulty = document.getElementById("calDiff").value;
+        calibrationOpen = false;
+        saveActive();
+        render();
+      });
+    }
+
+    // Upload phase
+    var dropzone = document.getElementById("dropzone");
+    var fileInput = document.getElementById("fileInput");
+    var browseBtn = document.getElementById("browseBtn");
+    var pasteArea = document.getElementById("pasteArea");
+    var beginBtn = document.getElementById("beginBtn");
+
+    if(browseBtn && fileInput){
+      browseBtn.addEventListener("click", function(){ fileInput.click(); });
+      fileInput.addEventListener("change", function(e){
+        if(e.target.files && e.target.files[0]) readFile(e.target.files[0]);
+      });
+    }
+    if(dropzone){
+      ["dragenter","dragover"].forEach(function(evt){
+        dropzone.addEventListener(evt, function(e){ e.preventDefault(); e.stopPropagation(); dropzone.classList.add("dragover"); });
+      });
+      ["dragleave","drop"].forEach(function(evt){
+        dropzone.addEventListener(evt, function(e){ e.preventDefault(); e.stopPropagation(); dropzone.classList.remove("dragover"); });
+      });
+      dropzone.addEventListener("drop", function(e){
+        var f = e.dataTransfer.files && e.dataTransfer.files[0];
+        if(f) readFile(f);
+      });
+    }
+    if(pasteArea){
+      pasteArea.addEventListener("input", function(){
+        state.resumeText = pasteArea.value;
+        var badge = document.getElementById("fileBadge");
+        if(badge) badge.textContent = state.resumeText.length + " characters loaded";
+        if(beginBtn) beginBtn.disabled = !state.resumeText.trim();
+      });
+    }
+    if(beginBtn){
+      beginBtn.addEventListener("click", function(){
+        if(!state.resumeText.trim()) return;
+        extractClaims();
+      });
+    }
+
+    // History
+    document.querySelectorAll("[data-open]").forEach(function(btn){
+      btn.addEventListener("click", function(){ loadSessionFromHistory(btn.getAttribute("data-open")); });
+    });
+    document.querySelectorAll("[data-del]").forEach(function(btn){
+      btn.addEventListener("click", function(){ deleteHistoryItem(btn.getAttribute("data-del")); });
+    });
+
+    // Retry
+    var retryBtn = document.getElementById("retryBtn");
+    if(retryBtn){
+      retryBtn.addEventListener("click", function(){
+        var fn = state.pendingRetry && state.pendingRetry.fn;
+        state.pendingRetry = null;
+        if(fn) fn();
+      });
+    }
+
+    // Interview phase
+    var submitBtn = document.getElementById("submitAnswerBtn");
+    if(submitBtn){ submitBtn.addEventListener("click", handleSubmitAnswer); }
+    var answerInput = document.getElementById("answerInput");
+    if(answerInput){
+      answerInput.addEventListener("keydown", function(e){
+        if((e.metaKey || e.ctrlKey) && e.key === "Enter"){ e.preventDefault(); handleSubmitAnswer(); }
+      });
+    }
+    var mobileDocketBtn = document.getElementById("mobileDocketBtn");
+    if(mobileDocketBtn){
+      mobileDocketBtn.addEventListener("click", function(){ dockOpenMobile = !dockOpenMobile; render(); });
+    }
+    var finishBtn = document.getElementById("finishBtn");
+    if(finishBtn){ finishBtn.addEventListener("click", generateReport); }
+    var reportBtn = document.getElementById("reportBtn");
+    if(reportBtn){ reportBtn.addEventListener("click", generateReport); }
+    var keepGoingBtn = document.getElementById("keepGoingBtn");
+    if(keepGoingBtn){
+      keepGoingBtn.addEventListener("click", function(){
+        state.claims.forEach(function(c){ if(c.confidence < 80) c.probeCount = Math.max(0, c.probeCount - 1); });
+        askNextQuestion();
+      });
+    }
+
+    // Report phase
+    var exportBtn = document.getElementById("exportBtn") || document.getElementById("exportBtn2");
+    if(exportBtn){ exportBtn.addEventListener("click", function(){ downloadText("defense-report-" + state.id + ".md", buildExportMarkdown()); }); }
+    var printBtn = document.getElementById("printBtn") || document.getElementById("printBtn2");
+    if(printBtn){ printBtn.addEventListener("click", function(){ window.print(); }); }
+    var reviewBtn = document.getElementById("reviewBtn");
+    if(reviewBtn){ reviewBtn.addEventListener("click", function(){ state.phase = "interview"; render(); }); }
+    var newCaseBtn = document.getElementById("newCaseBtn");
+    if(newCaseBtn){
+      newCaseBtn.addEventListener("click", function(){
+        archiveCurrentSession();
+        state = freshState();
+        saveActive();
+        render();
+      });
+    }
+
+    // Close calibration popover on outside click
+    document.addEventListener("click", function(e){
+      if(calibrationOpen && !e.target.closest(".chip")){
+        calibrationOpen = false;
+        render();
+      }
+    }, { once: true });
+  }
+
+  function readFile(file){
+    var name = file.name.toLowerCase();
+    if(!/\.(txt|md|markdown)$/.test(name)){
+      var badge = document.getElementById("fileBadge");
+      if(badge) badge.textContent = "Can't read this file type directly \u2014 please paste the text below.";
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(e){
+      state.resumeText = String(e.target.result || "");
+      var pasteArea = document.getElementById("pasteArea");
+      if(pasteArea) pasteArea.value = state.resumeText;
+      var badge = document.getElementById("fileBadge");
+      if(badge) badge.textContent = file.name + " \u00b7 " + state.resumeText.length + " characters loaded";
+      var beginBtn = document.getElementById("beginBtn");
+      if(beginBtn) beginBtn.disabled = !state.resumeText.trim();
+    };
+    reader.readAsText(file);
+  }
+
+  /* ================= Init ================= */
+  function init(){
+    if(!loadActive()){
+      state = freshState();
+    }
+    render();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
